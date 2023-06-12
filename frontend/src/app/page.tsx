@@ -1,44 +1,147 @@
-import Image from 'next/image'
-import { env } from "@/env"
+"use client";
 
-export default function Home() {
-  const DB_HOST = env.DB_HOST
+import {
+  Flex,
+  Box,
+  FormControl,
+  FormLabel,
+  FormErrorMessage,
+  Input,
+  Stack,
+  Button,
+  Heading,
+  Text,
+  useColorModeValue,
+  ButtonGroup
+
+} from '@chakra-ui/react';
+import { NextPage } from 'next';
+import { useForm } from 'react-hook-form';
+import axios from 'axios';
+import { env } from '@/env';
+import { useRouter } from 'next/navigation';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { error } from 'console';
+
+const schema = z.object({
+  email: z.string().email("Email inválido"),
+  code: z.string().length(6, "El código debe tener 6 caracteres")
+  .refine((check) => {
+    let isValid = true;
+    for (let i = 0; i < check.length; i++) {
+      const char = check[i];
+      if(!"0123456789".includes(char as string)){
+        isValid = false;
+      }
+    }
+    return isValid;
+  }, "Los caracteres del código solo pueden ser números")	
+});
+
+type FieldValues = z.infer<typeof schema>;
+
+const Login : NextPage = () => {
+  const white = useColorModeValue('white', 'white');
+
+  const {
+    register,
+    getValues,
+    handleSubmit,
+    formState: {errors},
+  } = useForm<FieldValues>({
+    resolver: zodResolver(schema)
+  });
+
+  const onSubmit = () => {
+    const {email, code} = getValues();
+    console.log({email, code});
+    axios.post(`${env.NEXT_PUBLIC_BACKEND_BASE_URL}/auth/login/${email}`,{ code })
+    .then(({ data }) => {
+    router.push('/calendar');
+    })
+    .catch((error) => console.log(error));
+  }
+
+  const onError = () => {
+    console.log({errors});
+  }
+
+  const router = useRouter();
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/app/page.tsx</code>
-        </p>
-      </div>
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-      <div className="mb-32 grid text-center lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
+    <Flex
+      minH={'100vh'}
+      align={'center'}
+      justify={'center'}
+      bg={useColorModeValue('gray.900', 'gray.200')}>
+      <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
+        <Stack align={'center'}>
+          <Heading fontSize={'4xl'} color={white}>Inicio de sesión</Heading>
+          <Text fontSize={'lg'} color={'gray.600'}>
+            organiza tus tareas! ✌️
+          </Text>
+        </Stack>
+        <Box
+          rounded={'lg'}
+          bg={useColorModeValue('gray.800', 'gray.200')}
+          boxShadow={'lg'}
+          p={8}>
+          <Stack spacing={4} color={white}>
+            <form onSubmit={handleSubmit(onSubmit, onError)}>
+            <FormControl id="email" isInvalid={!!errors.email}>
+              <FormLabel>Email</FormLabel>
+              <Input 
+              type="text" 
+              placeholder='Ingresa tu email'
+              {...register("email")}
+              />
+              <FormErrorMessage>{errors.email?.message}</FormErrorMessage>
+            </FormControl>
+            <FormControl id="code" isInvalid={!!errors.code}>
+              <FormLabel>Código</FormLabel>
+              <Input
+              type="number"
+              placeholder='Ingresa tu código'
+              {...register("code")}
+              />
+              <FormErrorMessage>{errors.code?.message}</FormErrorMessage>
+            </FormControl>
+            <ButtonGroup marginTop={8} justifyContent="center">
+              <Button 
+              type="submit"
+              color={white}
+              onClick={() => {
+                // const {email, code} = getValues();
+                // axios.post(`${env.NEXT_PUBLIC_BACKEND_BASE_URL}/auth/login/${email}`, 
+                // { code }
+                // )
+                // .then(({ data }) => {
+                //   router.push('/calendar');
+                // })
+                // .catch((error) => console.log(error));
+              }}
+              >
+                Iniciar sesión
+                </Button>{" "}
+
+              <Button color={white}
+              type="submit"
+              onClick={() => {
+                const email = getValues("email")
+                axios.post(`${env.NEXT_PUBLIC_BACKEND_BASE_URL}/auth/login/${email}/code`,)
+                .then(console.log).catch(console.log)
+              }}
+              >
+                Quiero un código
+              </Button>
+            </ButtonGroup>
+            </form>
+          </Stack>
+        </Box>
+      </Stack>
+    </Flex>
+  );
 }
+
+export default Login;

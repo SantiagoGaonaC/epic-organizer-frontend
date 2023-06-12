@@ -3,11 +3,13 @@ import { z } from "zod";
 
 export const env = createEnv({
   server: {
-    DB_HOST: z.string(),
+    PUBLIC_BACKEND_BASE_URL: z.string(),
   },
   client: {
+    NEXT_PUBLIC_BACKEND_BASE_URL: z.string(),
   },
   runtimeEnv: {
-    DB_HOST: process.env.DB_HOST, //EJEMPLOS
+    PUBLIC_BACKEND_BASE_URL: process.env.PUBLIC_BACKEND_BASE_URL,
+    NEXT_PUBLIC_BACKEND_BASE_URL: process.env.NEXT_PUBLIC_BACKEND_BASE_URL
   },
 });
