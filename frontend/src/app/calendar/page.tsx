@@ -1,7 +1,3 @@
 export default function Login() {
-    return(
-        <div>
-            CALENDARIO
-        </div>
-    )
+  return <div>CALENDARIO</div>;
 }
