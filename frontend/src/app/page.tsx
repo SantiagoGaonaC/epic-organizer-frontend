@@ -56,7 +56,11 @@ const Login: NextPage = () => {
     const { email, code } = getValues();
     console.log({ email, code });
     axios
-      .post(`${env.NEXT_PUBLIC_BACKEND_BASE_URL}/auth/login/${email}`, { code })
+      .post(
+        `${env.NEXT_PUBLIC_BACKEND_BASE_URL}/auth/login/${email}`,
+        { code },
+        { withCredentials: true }
+      )
       .then(({ data }) => {
         router.push("/calendar");
       })

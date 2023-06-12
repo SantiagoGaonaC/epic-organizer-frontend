@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import sendEmail from "../helpers/mailer";
 import UserModel from "../models/user";
+import jwt from "jsonwebtoken";
 
 export const login = async (req: Request, res: Response) => {
   const { email } = req.params;
@@ -9,6 +10,21 @@ export const login = async (req: Request, res: Response) => {
   if (!user) {
     return res.status(404).json({ ok: false, message: "Code not found" });
   }
+
+  const userObject = user.toObject();
+  console.log(userObject);
+  const token = jwt.sign(
+    {
+      sub: user._id,
+      firstname: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      role: user.rol,
+    },
+    process.env.JWT_SECRET as string
+  );
+
+  res.cookie("jwt", token);
   res.status(200).json({ ok: true, message: "Code found!" });
 };
 
