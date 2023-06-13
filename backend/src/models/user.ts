@@ -12,6 +12,7 @@ const userSchema = new Schema({
     },
     required: true,
   },
+  activated: { type: Boolean, required: true, default: false },
 });
 
 export default model("User", userSchema, "users");

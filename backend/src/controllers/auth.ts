@@ -6,26 +6,38 @@ import jwt from "jsonwebtoken";
 export const login = async (req: Request, res: Response) => {
   const { email } = req.params;
   const { code } = req.body;
-  const user = await UserModel.findOne({ email, login_code: code });
-  if (!user) {
-    return res.status(404).json({ ok: false, message: "Code not found" });
+
+  try {
+    const user = await UserModel.findOne({ email, login_code: code });
+
+    if (!user) {
+      return res.status(404).json({ ok: false, message: "User not found" });
+    }
+
+    if (!user.activated) {
+      return res.status(403).json({ ok: false, message: "User not activated" });
+    }
+
+    const token = jwt.sign(
+      {
+        sub: user._id,
+        firstname: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        role: user.rol,
+      },
+      process.env.JWT_SECRET as string
+    );
+
+    res.cookie("jwt", token);
+    res.status(200).json({ ok: true, message: "Logged in successfully!" });
+  } catch (error) {
+    res.status(500).json({
+      ok: false,
+      error: "Internal Server Error",
+      activity: "login",
+    });
   }
-
-  const userObject = user.toObject();
-  console.log(userObject);
-  const token = jwt.sign(
-    {
-      sub: user._id,
-      firstname: user.firstName,
-      lastName: user.lastName,
-      email: user.email,
-      role: user.rol,
-    },
-    process.env.JWT_SECRET as string
-  );
-
-  res.cookie("jwt", token);
-  res.status(200).json({ ok: true, message: "Code found!" });
 };
 
 export const generateCode = async (req: Request, res: Response) => {
@@ -49,4 +61,79 @@ export const generateCode = async (req: Request, res: Response) => {
     html: "Código para ingresar: " + randomCode,
   });
   res.send("SEND CODE ROUTE");
+};
+
+export const registerUser = async (req: Request, res: Response) => {
+  try {
+    const { firstName, lastName, email } = req.body;
+
+    // Verificar si el usuario ya está registrado
+    const existingUser = await UserModel.findOne({ email });
+    if (existingUser) {
+      return res
+        .status(400)
+        .json({ ok: false, message: "User already exists" });
+    }
+
+    let randomCode = "";
+    for (let index = 0; index <= 5; index++) {
+      const random = Math.floor(Math.random() * 10);
+      randomCode += random;
+    }
+
+    // Crear un nuevo usuario con los datos proporcionados
+    const newUser = await UserModel.create({
+      firstName,
+      lastName,
+      email,
+      login_code: randomCode,
+      rol: {
+        admin: false,
+        user: true,
+      },
+      activated: false,
+    });
+
+    // Enviar un correo electrónico con el código de acceso
+    sendEmail({
+      to: email,
+      subject: "Código de activación: " + randomCode,
+      html: "Código para activar la cuenta: " + randomCode,
+    });
+
+    res.status(201).json({
+      ok: true,
+      user: newUser,
+      activity: "registerUser",
+      status: "Code send to email",
+    });
+  } catch (error) {
+    res.status(500).json({
+      ok: false,
+      error: "Internal Server Error",
+      activity: "registerUser",
+    });
+  }
+};
+
+export const activateUser = async (req: Request, res: Response) => {
+  try {
+    const { email, code } = req.body;
+
+    const user = await UserModel.findOne({ email, login_code: code });
+    if (!user) {
+      return res.status(404).json({ ok: false, message: "Code not found" });
+    }
+
+    user.activated = true;
+    await user.save();
+
+    res.status(200).json({ ok: true, message: "User activated" });
+  } catch (error) {
+    res.status(500).json({
+      ok: false,
+      error: "Internal Server Error",
+      activity: "activateUser",
+    });
+  }
 };
