@@ -96,7 +96,6 @@ const Login: NextPage = () => {
         setUserExist(true);
       }
       console.log(error.response.data.message);
-      setErrCode(true);
     }
   };
 
@@ -189,7 +188,9 @@ const Login: NextPage = () => {
                 apiData && (
                   <Center>
                     <FormControl id="code">
-                      <FormLabel marginTop={3}>Código</FormLabel>
+                      <FormLabel marginTop={3}>
+                        Ingresa el código enviado al tú email
+                      </FormLabel>
                       <HStack marginTop={2}>
                         <PinInput
                           type="number"
