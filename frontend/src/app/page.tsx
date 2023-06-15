@@ -13,6 +13,8 @@ import {
   Text,
   useColorModeValue,
   ButtonGroup,
+  Center,
+  Link,
 } from "@chakra-ui/react";
 import { NextPage } from "next";
 import { useForm } from "react-hook-form";
@@ -106,7 +108,7 @@ const Login: NextPage = () => {
                 />
                 <FormErrorMessage>{errors.email?.message}</FormErrorMessage>
               </FormControl>
-              <FormControl id="code" isInvalid={!!errors.code}>
+              <FormControl marginTop={3} id="code" isInvalid={!!errors.code}>
                 <FormLabel>Código</FormLabel>
                 <Input
                   type="number"
@@ -148,6 +150,16 @@ const Login: NextPage = () => {
                   Quiero un código
                 </Button>
               </ButtonGroup>
+              <Center>
+                <Link
+                  color={"blue.400"}
+                  marginTop={2}
+                  fontSize="xs"
+                  onClick={() => router.push("/register")}
+                >
+                  Registrarse
+                </Link>
+              </Center>
             </form>
           </Stack>
         </Box>
