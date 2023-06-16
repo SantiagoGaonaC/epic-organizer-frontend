@@ -24,6 +24,7 @@ import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { error } from "console";
+import { useState } from "react";
 
 const schema = z.object({
   email: z.string().email("Email inválido"),
@@ -46,6 +47,9 @@ type FieldValues = z.infer<typeof schema>;
 
 const Login: NextPage = () => {
   const white = useColorModeValue("white", "white");
+  const [noActiveUser, setNoActiveUser] = useState(false);
+  const [emailCodeIncorrect, setEmailCodeIncorrect] = useState(false);
+  const [errLogin, setErrLogin] = useState(false);
 
   const {
     register,
@@ -54,26 +58,69 @@ const Login: NextPage = () => {
     formState: { errors },
   } = useForm<FieldValues>({ resolver: zodResolver(schema) });
 
-  const onSubmit = () => {
+  const resetStates = () => {
+    setNoActiveUser(false);
+    setEmailCodeIncorrect(false);
+    setErrLogin(false);
+  };
+
+  const onSubmit = async () => {
     const { email, code } = getValues();
     console.log({ email, code });
-    axios
-      .post(
+    resetStates();
+
+    try {
+      const response = await axios.post(
         `${env.NEXT_PUBLIC_BACKEND_BASE_URL}/auth/login/${email}`,
         { code },
         { withCredentials: true }
-      )
-      .then(({ data }) => {
+      );
+
+      if (response.data.ok) {
         router.push("/calendar");
-      })
-      .catch((error) => console.log(error));
+      } else {
+        console.log("Error: Error en el inicio de sesión");
+        setErrLogin(true);
+      }
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        if (error.response) {
+          switch (error.response.status) {
+            case 403:
+              console.log("Usuario no activado");
+              setNoActiveUser(true);
+              break;
+            case 404:
+              console.log("Email o código incorrecto");
+              setEmailCodeIncorrect(true);
+              break;
+            default:
+              console.log("Error: " + error);
+              setErrLogin(true);
+          }
+        } else {
+          console.log("Error: " + error);
+          setErrLogin(true);
+        }
+      } else {
+        console.log("Error: " + error);
+        setErrLogin(true);
+      }
+    }
   };
 
   const onError = () => {
+    resetStates();
     console.log({ errors });
   };
 
   const router = useRouter();
+
+  const errorMessages = [
+    { condition: noActiveUser, message: "Usuario no activo" },
+    { condition: emailCodeIncorrect, message: "Email o código incorrecto" },
+    { condition: errLogin, message: "Error en el inicio de sesión" },
+  ];
 
   return (
     <Flex
@@ -150,6 +197,16 @@ const Login: NextPage = () => {
                   Quiero un código
                 </Button>
               </ButtonGroup>
+              {errorMessages.map(
+                ({ condition, message }) =>
+                  condition && (
+                    <Center key={message}>
+                      <Text color="red" fontSize="sm" mt={2}>
+                        {message}
+                      </Text>
+                    </Center>
+                  )
+              )}
               <Center>
                 <Link
                   color={"blue.400"}
