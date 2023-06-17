@@ -125,8 +125,12 @@ export const activateUser = async (req: Request, res: Response) => {
       return res.status(404).json({ ok: false, message: "Code not found" });
     }
 
-    user.activated = true;
-    await user.save();
+    if (!user.activated) {
+      // Realizar acciones solo si el usuario no está activado previamente
+      user.activated = true;
+      user.activationExpiresAt = undefined; // Eliminar la fecha de vencimiento
+      await user.save();
+    }
 
     res.status(200).json({ ok: true, message: "User activated" });
   } catch (error) {
