@@ -52,7 +52,7 @@ const schema = z.object({
 
 type FieldValues = z.infer<typeof schema>;
 
-const Login: NextPage = () => {
+const Register: NextPage = () => {
   const white = useColorModeValue("white", "white");
   const [apiData, setApiData] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -177,11 +177,11 @@ const Login: NextPage = () => {
                 <FormErrorMessage>{errors.email?.message}</FormErrorMessage>
               </FormControl>
               {loading ? (
-                <div className="grid place-items-center h-full">
+                <div className="grid h-full place-items-center">
                   <img
                     src="https://cdn-icons-png.flaticon.com/512/1477/1477009.png"
                     alt="..."
-                    className="w-14 mx-auto mb-2 animate-spin"
+                    className="mx-auto mb-2 w-14 animate-spin"
                   />
                 </div>
               ) : (
@@ -229,7 +229,7 @@ const Login: NextPage = () => {
                                   <AlertIcon />
                                   Usuario Activado, rediriendo a login...
                                 </Alert>;
-                                router.push("/");
+                                router.push("/login");
                                 console.log("Usuario activado" + response.data);
                               } else {
                                 console.log("Error al activar usuario");
@@ -260,7 +260,15 @@ const Login: NextPage = () => {
               {!apiData && (
                 <Center>
                   <ButtonGroup marginTop={3} justifyContent="center">
-                    <Button type="submit" color={white} onClick={callApiCode}>
+                    <Button
+                      type="submit"
+                      rounded={"full"}
+                      _hover={{
+                        bg: "gray.700",
+                      }}
+                      color={white}
+                      onClick={callApiCode}
+                    >
                       Registrarse
                     </Button>
                   </ButtonGroup>
@@ -271,7 +279,7 @@ const Login: NextPage = () => {
                   color={"blue.400"}
                   marginTop={2}
                   fontSize="xs"
-                  onClick={() => router.push("/")}
+                  onClick={() => router.push("/login")}
                 >
                   Login
                 </Link>
@@ -284,4 +292,4 @@ const Login: NextPage = () => {
   );
 };
 
-export default Login;
+export default Register;
