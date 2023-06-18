@@ -59,6 +59,8 @@ const Register: NextPage = () => {
   const [val, setVal] = useState("");
   const [userExist, setUserExist] = useState(false);
   const [errCode, setErrCode] = useState(false);
+  const [reSendCode, setReSendCode] = useState(false);
+  const [loadingCode, setLoadingCode] = useState(false);
 
   const callApiCode = async () => {
     const { firstname, lastname, email } = getValues();
@@ -274,6 +276,44 @@ const Register: NextPage = () => {
                   </ButtonGroup>
                 </Center>
               )}
+              <Center>
+                <Text
+                  as={"span"}
+                  position={"relative"}
+                  color={"white"}
+                  fontSize="xs"
+                >
+                  ¿No recibiste un código?
+                </Text>
+                <Button
+                  padding={1}
+                  variant="link"
+                  size="xs"
+                  color={white}
+                  type="submit"
+                  onClick={() => {
+                    setLoadingCode(true);
+                    const email = getValues("email");
+                    axios
+                      .post(
+                        `${env.NEXT_PUBLIC_BACKEND_BASE_URL}/auth/login/${email}/code`
+                      )
+                      .then((response) => {
+                        console.log(response);
+                        setLoadingCode(false);
+                        setReSendCode(true);
+                      })
+                      .catch(console.log);
+                  }}
+                >
+                  Volver a enviar{" "}
+                  {loadingCode ? (
+                    <Text>⏳</Text>
+                  ) : (
+                    reSendCode && <Text>✅</Text>
+                  )}
+                </Button>
+              </Center>
               <Center>
                 <Link
                   color={"blue.400"}
