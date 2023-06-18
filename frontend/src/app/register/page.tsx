@@ -20,6 +20,7 @@ import {
   Alert,
   AlertIcon,
   Link,
+  useToast,
 } from "@chakra-ui/react";
 import { NextPage } from "next";
 import { useForm } from "react-hook-form";
@@ -30,6 +31,7 @@ import { set, z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { error } from "console";
 import { useState } from "react";
+import { CheckIcon } from "@chakra-ui/icons";
 
 const schema = z.object({
   firstname: z.string().nonempty("El nombre no puede estar vacío"),
@@ -61,6 +63,7 @@ const Register: NextPage = () => {
   const [errCode, setErrCode] = useState(false);
   const [reSendCode, setReSendCode] = useState(false);
   const [loadingCode, setLoadingCode] = useState(false);
+  const toast = useToast();
 
   const callApiCode = async () => {
     const { firstname, lastname, email } = getValues();
@@ -298,8 +301,13 @@ const Register: NextPage = () => {
                       .post(
                         `${env.NEXT_PUBLIC_BACKEND_BASE_URL}/auth/login/${email}/code`
                       )
-                      .then((response) => {
-                        console.log(response);
+                      .then(({ data }) => {
+                        toast({
+                          description: data.message,
+                          status: "success",
+                          icon: <CheckIcon />,
+                          position: "top",
+                        });
                         setLoadingCode(false);
                         setReSendCode(true);
                       })

@@ -18,19 +18,21 @@ export const login = async (req: Request, res: Response) => {
       return res.status(403).json({ ok: false, message: "User not activated" });
     }
 
-    const token = jwt.sign(
-      {
-        sub: user._id,
-        firstname: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        role: user.rol,
-      },
-      process.env.JWT_SECRET as string
-    );
+    const tokenPayload = {
+      sub: user._id,
+      firstname: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      role: user.rol,
+    };
+    const token = jwt.sign(tokenPayload, process.env.JWT_SECRET as string);
 
     res.cookie("jwt", token);
-    res.status(200).json({ ok: true, message: "Logged in successfully!" });
+    res.status(200).json({
+      ok: true,
+      data: tokenPayload,
+      message: "Logged in successfully!",
+    });
   } catch (error) {
     res.status(500).json({
       ok: false,
@@ -60,7 +62,7 @@ export const generateCode = async (req: Request, res: Response) => {
     subject: "Este es tu código: " + randomCode,
     html: "Código para ingresar: " + randomCode,
   });
-  res.send("SEND CODE ROUTE");
+  res.status(200).json({ ok: true, message: "Código enviado con exito" });
 };
 
 export const registerUser = async (req: Request, res: Response) => {

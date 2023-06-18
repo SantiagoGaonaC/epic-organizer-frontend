@@ -15,6 +15,7 @@ import {
   ButtonGroup,
   Center,
   Link,
+  useToast,
 } from "@chakra-ui/react";
 import { NextPage } from "next";
 import { useForm } from "react-hook-form";
@@ -25,38 +26,24 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { error } from "console";
 import { useState } from "react";
-
-const schema = z.object({
-  email: z.string().email("Email inválido"),
-  code: z
-    .string()
-    .length(6, "El código debe tener 6 caracteres")
-    .refine((check) => {
-      let isValid = true;
-      for (let i = 0; i < check.length; i++) {
-        const char = check[i];
-        if (!"0123456789".includes(char as string)) {
-          isValid = false;
-        }
-      }
-      return isValid;
-    }, "Los caracteres del código solo pueden ser números"),
-});
-
-type FieldValues = z.infer<typeof schema>;
+import { CheckIcon } from "@chakra-ui/icons";
+import { Login, LoginSchema } from "../../../schemas/AuthSchema";
+import useAuth from "../../../hooks/useAuth";
 
 const Login: NextPage = () => {
   const white = useColorModeValue("white", "white");
   const [noActiveUser, setNoActiveUser] = useState(false);
   const [emailCodeIncorrect, setEmailCodeIncorrect] = useState(false);
   const [errLogin, setErrLogin] = useState(false);
+  const toast = useToast();
+  const { setUser } = useAuth();
 
   const {
     register,
     getValues,
     handleSubmit,
     formState: { errors },
-  } = useForm<FieldValues>({ resolver: zodResolver(schema) });
+  } = useForm<Login>({ resolver: zodResolver(LoginSchema) });
 
   const resetStates = () => {
     setNoActiveUser(false);
@@ -77,6 +64,9 @@ const Login: NextPage = () => {
       );
 
       if (response.data.ok) {
+        const tokenPayload = response.data.data;
+        localStorage.setItem("user", JSON.stringify(tokenPayload));
+        setUser(tokenPayload);
         router.push("/calendar");
       } else {
         console.log("Error: Error en el inicio de sesión");
@@ -198,7 +188,14 @@ const Login: NextPage = () => {
                       .post(
                         `${env.NEXT_PUBLIC_BACKEND_BASE_URL}/auth/login/${email}/code`
                       )
-                      .then(console.log)
+                      .then(({ data }) => {
+                        toast({
+                          description: data.message,
+                          status: "success",
+                          icon: <CheckIcon />,
+                          position: "top",
+                        });
+                      })
                       .catch(console.log);
                   }}
                 >
