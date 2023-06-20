@@ -21,6 +21,7 @@ import {
   AlertIcon,
   Link,
   useToast,
+  Spinner,
 } from "@chakra-ui/react";
 import { NextPage } from "next";
 import { useForm } from "react-hook-form";
@@ -29,7 +30,6 @@ import { env } from "@/env";
 import { useRouter } from "next/navigation";
 import { set, z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { error } from "console";
 import { useState } from "react";
 import { CheckIcon } from "@chakra-ui/icons";
 
@@ -58,7 +58,6 @@ const Register: NextPage = () => {
   const white = useColorModeValue("white", "white");
   const [apiData, setApiData] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [val, setVal] = useState("");
   const [userExist, setUserExist] = useState(false);
   const [errCode, setErrCode] = useState(false);
   const [reSendCode, setReSendCode] = useState(false);
@@ -111,8 +110,8 @@ const Register: NextPage = () => {
     formState: { errors },
   } = useForm<FieldValues>({ resolver: zodResolver(schema) });
 
-  const onError = () => {
-    console.log({ errors });
+  const onError = (errors: any) => {
+    console.log({ onError: errors });
   };
 
   const router = useRouter();
@@ -182,51 +181,46 @@ const Register: NextPage = () => {
                 <FormErrorMessage>{errors.email?.message}</FormErrorMessage>
               </FormControl>
               {loading ? (
-                <div className="grid h-full place-items-center">
-                  <img
-                    src="https://cdn-icons-png.flaticon.com/512/1477/1477009.png"
-                    alt="..."
-                    className="mx-auto mb-2 w-14 animate-spin"
-                  />
-                </div>
+                <Spinner
+                  marginTop={3}
+                  className="grid h-full place-items-center"
+                />
               ) : (
                 apiData && (
                   <Center>
-                    <FormControl id="code">
-                      <FormLabel marginTop={3}>
+                    <FormControl
+                      marginTop={3}
+                      id="code"
+                      isInvalid={!!errors.code}
+                    >
+                      <FormLabel>
                         Ingresa el código enviado al tú email
                       </FormLabel>
-                      <HStack marginTop={2}>
-                        <PinInput
-                          type="number"
-                          id="code"
-                          onChange={(e) => setVal(e)}
-                        >
-                          <PinInputField {...register("code")} />
-                          <PinInputField {...register("code")} />
-                          <PinInputField {...register("code")} />
-                          <PinInputField {...register("code")} />
-                          <PinInputField {...register("code")} />
-                          <PinInputField {...register("code")} />
-                        </PinInput>
-                      </HStack>
+                      <Input
+                        type="number"
+                        placeholder="Ingresa tu código"
+                        {...register("code")}
+                        className="text-center"
+                      />
                       <FormErrorMessage>
                         {errors.code?.message}
                       </FormErrorMessage>
                       <Center>
                         <Button
-                          marginTop={3}
-                          color={white}
                           type="submit"
+                          rounded={"full"}
+                          _hover={{
+                            bg: "gray.700",
+                          }}
+                          color={white}
                           onClick={async () => {
-                            const { email } = getValues();
-                            console.log(email, val);
+                            const { email, code } = getValues();
                             try {
                               const response = await axios.post(
                                 `${env.NEXT_PUBLIC_BACKEND_BASE_URL}/auth/activateUser`,
                                 {
                                   email: email,
-                                  code: val,
+                                  code: code,
                                 }
                               );
                               if (response.data.ok) {
