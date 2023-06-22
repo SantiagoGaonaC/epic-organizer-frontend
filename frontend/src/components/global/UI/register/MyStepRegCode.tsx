@@ -3,21 +3,17 @@ import {
   AlertIcon,
   Button,
   Center,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
   Text,
   useToast,
-  Input,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { env } from "process";
 import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { CheckIcon } from "@chakra-ui/icons";
 import { useState } from "react";
+import MyForm from "../entities/forms/MyForm";
+import MyInput from "../entities/input/MyInput";
 
 const codeSchema = z.object({
   code: z
@@ -38,18 +34,11 @@ interface Props {
 type CodeValues = z.infer<typeof codeSchema>;
 
 const MyStepRegCode = ({ onError, email }: Props) => {
-  const toast = useToast();
-  const router = useRouter();
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<CodeValues>({
-    resolver: zodResolver(codeSchema),
-  });
   const [errCode, setErrCode] = useState(false);
   const [loadingCode, setLoadingCode] = useState(false);
   const [reSendCode, setReSendCode] = useState(false);
+  const router = useRouter();
+  const toast = useToast();
 
   const handleFormSubmit = async (values: CodeValues) => {
     const { code } = values;
@@ -99,16 +88,18 @@ const MyStepRegCode = ({ onError, email }: Props) => {
   };
 
   return (
-    <form onSubmit={handleSubmit(handleFormSubmit, onError)}>
-      <FormControl marginTop={3} id="code" isInvalid={!!errors.code}>
-        <FormLabel>Ingresa el código enviado a tu email</FormLabel>
-        <Input
-          type="number"
-          placeholder="Ingresa tu código"
-          {...register("code")}
-          className="text-center"
-        />
-        <FormErrorMessage>{errors.code?.message}</FormErrorMessage>
+    <MyForm
+      zodSchema={codeSchema}
+      onSubmit={handleFormSubmit}
+      onError={onError}
+    >
+      <MyInput
+        label="Ingresa el código enviado a tu email"
+        placeholder="Código"
+        fieldname="code"
+        className="text-center"
+        type="number"
+      >
         <Center>
           <Button
             marginTop={3}
@@ -122,7 +113,7 @@ const MyStepRegCode = ({ onError, email }: Props) => {
             Enviar Código
           </Button>
         </Center>
-      </FormControl>
+      </MyInput>
       {errCode && (
         <Center>
           <Text color="red" fontSize="sm" mt={2}>
@@ -146,7 +137,7 @@ const MyStepRegCode = ({ onError, email }: Props) => {
           {loadingCode ? <Text>⏳</Text> : reSendCode && <Text>✅</Text>}
         </Button>
       </Center>
-    </form>
+    </MyForm>
   );
 };
 
