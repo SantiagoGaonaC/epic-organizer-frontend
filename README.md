@@ -1,5 +1,15 @@
 # Epic Organizer
-
+<div style="display: flex; justify-content: center;">
+<img src="https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white"/>
+<img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white"/>
+<img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white"/>
+<img src="https://shields.io/badge/chakra--ui-black?logo=chakraui&style=for-the-badge"/>
+<img src="https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white"/>
+<img src="https://img.shields.io/badge/Express.js-404D59?style=for-the-badge"/>
+<img src="https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white"/>
+<img src="https://img.shields.io/badge/json%20web%20tokens-323330?style=for-the-badge&logo=json-web-tokens&logoColor=pink"/>
+<div/>
+  
 Epic Organizer es una aplicación de gestión de tareas y calendario. Los usuarios pueden crear tareas con etiquetas y fechas, que se muestran en un calendario interactivo. Las tareas pueden filtrarse por etiquetas, y se pueden agregar notas a cada tarea. 
 
 ## Características
@@ -62,12 +72,6 @@ Los usuarios deben poder filtrar sus tareas en el calendario por etiquetas.
 
 - Implementar una interfaz en React para seleccionar etiquetas de filtrado.
 - Agregar funcionalidad para filtrar las tareas en el calendario según las etiquetas seleccionadas.
-
-## Tecnologías
-
-- Backend: Node, Express, MongoDB
-- Frontend: React, Next.js, Vite, Tailwind CSS, React Hook Form, Chakra UI
-- Autenticación: Código enviado por correo electrónico
 
 ---
 
