@@ -3,10 +3,6 @@
 import {
   Flex,
   Box,
-  FormControl,
-  FormLabel,
-  FormErrorMessage,
-  Input,
   Stack,
   Button,
   Heading,
@@ -18,32 +14,24 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { NextPage } from "next";
-import { useForm } from "react-hook-form";
 import axios from "axios";
 import { env } from "@/env";
 import { useRouter } from "next/navigation";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { error } from "console";
 import { useState } from "react";
 import { CheckIcon } from "@chakra-ui/icons";
-import { Login, LoginSchema } from "../../../schemas/AuthSchema";
+import { LoginValues, LoginSchema } from "@/schemas/AuthSchema";
 import useAuth from "../../../hooks/useAuth";
+import MyForm from "@/components/global/UI/entities/forms/MyForm";
+import MyInput from "@/components/global/UI/entities/input/MyInput";
 
 const Login: NextPage = () => {
   const white = useColorModeValue("white", "white");
   const [noActiveUser, setNoActiveUser] = useState(false);
   const [emailCodeIncorrect, setEmailCodeIncorrect] = useState(false);
+  const [emailValue, setEmailValue] = useState("");
   const [errLogin, setErrLogin] = useState(false);
   const toast = useToast();
   const { setUser } = useAuth();
-
-  const {
-    register,
-    getValues,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<Login>({ resolver: zodResolver(LoginSchema) });
 
   const resetStates = () => {
     setNoActiveUser(false);
@@ -51,8 +39,8 @@ const Login: NextPage = () => {
     setErrLogin(false);
   };
 
-  const onSubmit = async () => {
-    const { email, code } = getValues();
+  const onSubmit = async (values: LoginValues) => {
+    const { email, code } = values;
     console.log({ email, code });
     resetStates();
 
@@ -99,9 +87,38 @@ const Login: NextPage = () => {
     }
   };
 
-  const onError = () => {
+  const getCode = async (email: string) => {
+    console.log({ email });
+    try {
+      const response = await axios.post(
+        `${env.NEXT_PUBLIC_BACKEND_BASE_URL}/auth/login/${email}/code`
+      );
+      if (response.data.ok) {
+        toast({
+          description: response.data.message,
+          status: "success",
+          icon: <CheckIcon />,
+          position: "top",
+        });
+      } else {
+        console.log("Error: Error al obtener el código");
+      }
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        if (error.response) {
+          console.log("Error: " + error.response.data.message);
+        } else {
+          console.log("Error: " + error);
+        }
+      } else {
+        console.log("Error: " + error);
+      }
+    }
+  };
+
+  const onError = (errors: any) => {
     resetStates();
-    console.log({ errors });
+    console.log({ errors: errors });
   };
 
   const router = useRouter();
@@ -135,25 +152,17 @@ const Login: NextPage = () => {
           p={8}
         >
           <Stack spacing={4} color={white}>
-            <form onSubmit={handleSubmit(onSubmit, onError)}>
-              <FormControl id="email" isInvalid={!!errors.email}>
-                <FormLabel>Email</FormLabel>
-                <Input
-                  type="text"
-                  placeholder="Ingresa tu email"
-                  {...register("email")}
-                />
-                <FormErrorMessage>{errors.email?.message}</FormErrorMessage>
-              </FormControl>
-              <FormControl marginTop={3} id="code" isInvalid={!!errors.code}>
-                <FormLabel>Código</FormLabel>
-                <Input
-                  type="number"
-                  placeholder="Ingresa tu código"
-                  {...register("code")}
-                />
-                <FormErrorMessage>{errors.code?.message}</FormErrorMessage>
-              </FormControl>
+            <MyForm
+              onSubmit={onSubmit}
+              onError={onError}
+              zodSchema={LoginSchema}
+            >
+              <MyInput
+                label="Email"
+                fieldname="email"
+                onChange={(e) => setEmailValue(e.target.value)}
+              />
+              <MyInput label="Code" fieldname="code" type="number" />
               <ButtonGroup marginTop={8} justifyContent="center">
                 <Button
                   type="submit"
@@ -162,16 +171,7 @@ const Login: NextPage = () => {
                   _hover={{
                     bg: "gray.700",
                   }}
-                  onClick={() => {
-                    // const {email, code} = getValues();
-                    // axios.post(`${env.NEXT_PUBLIC_BACKEND_BASE_URL}/auth/login/${email}`,
-                    // { code }
-                    // )
-                    // .then(({ data }) => {
-                    //   router.push('/calendar');
-                    // })
-                    // .catch((error) => console.log(error));
-                  }}
+                  onClick={() => {}}
                 >
                   Iniciar sesión
                 </Button>{" "}
@@ -182,22 +182,7 @@ const Login: NextPage = () => {
                     bg: "gray.700",
                   }}
                   type="submit"
-                  onClick={() => {
-                    const email = getValues("email");
-                    axios
-                      .post(
-                        `${env.NEXT_PUBLIC_BACKEND_BASE_URL}/auth/login/${email}/code`
-                      )
-                      .then(({ data }) => {
-                        toast({
-                          description: data.message,
-                          status: "success",
-                          icon: <CheckIcon />,
-                          position: "top",
-                        });
-                      })
-                      .catch(console.log);
-                  }}
+                  onClick={() => getCode(emailValue)}
                 >
                   Quiero un código
                 </Button>
@@ -222,7 +207,7 @@ const Login: NextPage = () => {
                   Registrarse
                 </Link>
               </Center>
-            </form>
+            </MyForm>
           </Stack>
         </Box>
       </Stack>

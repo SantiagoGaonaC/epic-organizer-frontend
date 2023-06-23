@@ -14,6 +14,7 @@ interface Props {
   children?: ReactNode;
   className?: string;
   type?: string;
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const MyInput = ({
@@ -23,6 +24,7 @@ const MyInput = ({
   children,
   className,
   type,
+  onChange,
 }: Props) => {
   const {
     formState: { errors },
@@ -36,6 +38,7 @@ const MyInput = ({
         placeholder={placeholder || label}
         {...register(fieldname)}
         className={className}
+        onChange={onChange}
       />
       {children}
       <FormErrorMessage>

@@ -14,10 +14,9 @@ import { NextPage } from "next";
 import axios from "axios";
 import { env } from "@/env";
 import { useState, useEffect } from "react";
-import MyStepRegister, {
-  RegistrationValues,
-} from "@/components/global/UI/register/MyStepRegister";
+import MyStepRegister from "@/components/global/UI/register/MyStepRegister";
 import MyStepRegCode from "@/components/global/UI/register/MyStepRegCode";
+import { RegistrationValues } from "@/schemas/RegisterSchema";
 
 const Register: NextPage = () => {
   const white = useColorModeValue("white", "white");
