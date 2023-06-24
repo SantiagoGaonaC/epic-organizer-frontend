@@ -1,4 +1,3 @@
-"use client";
 import {
   Dispatch,
   ReactNode,
@@ -37,7 +36,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
     setTimeout(() => {
       setValidating(false);
-    }, 60);
+    }, 75);
   };
   useEffect(() => {
     const userFromLS = localStorage.getItem("user");
@@ -48,18 +47,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   if (validating)
     return (
       <Flex
+        minHeight={"100vh"}
         margin="0 auto"
-        width="20rem"
-        height="20rem"
+        width="40rem"
+        height="40rem"
         alignItems="center"
         justifyContent="center"
       >
         <div className="grid h-full place-items-center">
-          <img
-            src="https://cdn-icons-png.flaticon.com/512/1477/1477009.png"
-            alt="..."
-            className="w-14 animate-spin"
-          />
+          <Spinner w={34} h={34} />
         </div>
       </Flex>
     );

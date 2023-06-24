@@ -16,7 +16,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className="bg-[#171923]">
       <body>
         <AuthProvider>
           <ChakraProvider>{children}</ChakraProvider>

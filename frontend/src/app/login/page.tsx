@@ -28,6 +28,7 @@ const Login: NextPage = () => {
   const white = useColorModeValue("white", "white");
   const [noActiveUser, setNoActiveUser] = useState(false);
   const [emailCodeIncorrect, setEmailCodeIncorrect] = useState(false);
+  const [emailNotFound, setEmailNotFound] = useState(false);
   const [emailValue, setEmailValue] = useState("");
   const [errLogin, setErrLogin] = useState(false);
   const toast = useToast();
@@ -37,6 +38,7 @@ const Login: NextPage = () => {
     setNoActiveUser(false);
     setEmailCodeIncorrect(false);
     setErrLogin(false);
+    setEmailNotFound(false);
   };
 
   const onSubmit = async (values: LoginValues) => {
@@ -69,8 +71,12 @@ const Login: NextPage = () => {
               setNoActiveUser(true);
               break;
             case 404:
-              console.log("Email o código incorrecto");
-              setEmailCodeIncorrect(true);
+              if (error.response.data.message === "User not found") {
+                setEmailNotFound(true);
+              } else {
+                console.log("Email o código incorrecto");
+                setEmailCodeIncorrect(true);
+              }
               break;
             default:
               console.log("Error: " + error);
@@ -127,6 +133,7 @@ const Login: NextPage = () => {
     { condition: noActiveUser, message: "Usuario no activo" },
     { condition: emailCodeIncorrect, message: "Email o código incorrecto" },
     { condition: errLogin, message: "Error en el inicio de sesión" },
+    { condition: emailNotFound, message: "El email no existe" },
   ];
 
   return (
