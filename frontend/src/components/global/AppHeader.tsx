@@ -1,18 +1,18 @@
 "use client";
-import { Button, Flex } from "@chakra-ui/react";
+import { Button, Flex, MenuItem } from "@chakra-ui/react";
 import React, { useContext } from "react";
 import { AuthContext } from "./AuthProvier";
-import useAuth from "../../../hooks/useAuth";
+import useAuth from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 
 const AppHeader = () => {
   const router = useRouter();
   const { user, setUser } = useAuth();
   return (
-    <Flex>
-      {!user && <Button>Iniciar Sesión</Button>}{" "}
+    <>
+      {!user && <MenuItem>Iniciar Sesión</MenuItem>}{" "}
       {!!user && (
-        <Button
+        <MenuItem
           onClick={() => {
             localStorage.removeItem("user");
             setUser(null);
@@ -21,9 +21,9 @@ const AppHeader = () => {
           }}
         >
           Cerrar Sesión
-        </Button>
+        </MenuItem>
       )}
-    </Flex>
+    </>
   );
 };
 

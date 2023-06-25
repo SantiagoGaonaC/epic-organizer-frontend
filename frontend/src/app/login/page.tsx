@@ -20,7 +20,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { CheckIcon } from "@chakra-ui/icons";
 import { LoginValues, LoginSchema } from "@/schemas/AuthSchema";
-import useAuth from "../../../hooks/useAuth";
+import useAuth from "@/hooks/useAuth";
 import MyForm from "@/components/global/UI/entities/forms/MyForm";
 import MyInput from "@/components/global/UI/entities/input/MyInput";
 
