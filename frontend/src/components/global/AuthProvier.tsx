@@ -25,13 +25,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const pathname = usePathname();
   const router = useRouter();
   const PROTECTED_ROUTES = ["/calendar"];
-  const PROTECTED_ROUTES_USER_AUTH = ["/login ", "/register"];
+  const PROTECTED_ROUTES_USER_AUTH = ["/login", "/register", "/"];
 
   const validateRoutes = (user: TokenPayload) => {
     if (!user && PROTECTED_ROUTES.includes(pathname)) {
       router.push("/");
     }
-    if (!!user && pathname === "/") {
+    if (!!user && PROTECTED_ROUTES_USER_AUTH.includes(pathname)) {
       router.push("/calendar");
     }
     setTimeout(() => {

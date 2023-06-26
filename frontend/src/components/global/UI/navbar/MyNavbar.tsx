@@ -45,7 +45,7 @@ export default function MyNavbar() {
       <Box bg={useColorModeValue("gray.900", "gray.100")} px={4}>
         <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
           <HStack
-            color="white"
+            color={useColorModeValue("white", "black")}
             as={"nav"}
             spacing={4}
             display={{ base: "none", md: "flex" }}
