@@ -1,6 +1,7 @@
 "use client";
 import { AuthProvider } from "@/components/global/AuthProvier";
 import "./globals.css";
+import theme from "@/theme/theme";
 
 import { CacheProvider } from "@chakra-ui/next-js";
 import { ChakraProvider } from "@chakra-ui/react";
@@ -19,7 +20,7 @@ export default function RootLayout({
     <html lang="en" className="bg-[#171923]">
       <body>
         <AuthProvider>
-          <ChakraProvider>{children}</ChakraProvider>
+          <ChakraProvider theme={theme}>{children}</ChakraProvider>
         </AuthProvider>
       </body>
     </html>
