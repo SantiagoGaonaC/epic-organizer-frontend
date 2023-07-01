@@ -23,7 +23,7 @@ export const MyModalTask = () => {
   const initialRef = React.useRef(null);
   const finalRef = React.useRef(null);
   const [startDate, setStartDate] = useState(new Date());
-  console.log(startDate);
+  //console.log(startDate);
   return {
     isOpen,
     onOpen,
