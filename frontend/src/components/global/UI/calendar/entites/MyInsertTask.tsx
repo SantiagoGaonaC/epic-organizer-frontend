@@ -2,8 +2,12 @@ import { AddIcon } from "@chakra-ui/icons";
 import { IconButton, useColorModeValue } from "@chakra-ui/react";
 import { MyModalTask } from "./MyModalTask";
 
-export const MyInsertTask = () => {
-  const { onOpen, ModalComponent } = MyModalTask();
+export const MyInsertTask = ({
+  selectedDate,
+}: {
+  selectedDate?: Date | null;
+}) => {
+  const { onOpen, ModalComponent } = MyModalTask(selectedDate ?? new Date());
 
   return (
     <>

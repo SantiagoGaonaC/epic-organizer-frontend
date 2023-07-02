@@ -4,9 +4,9 @@ const MyColumnHead = () => {
 
   return (
     <div className="flex">
-      {days.map((dia) => (
-        <div key={dia} className="flex-grow text-center">
-          {dia}
+      {days.map((day) => (
+        <div key={day} className="flex-grow text-center">
+          {day}
         </div>
       ))}
     </div>

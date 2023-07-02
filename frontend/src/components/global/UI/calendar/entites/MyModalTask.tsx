@@ -18,12 +18,12 @@ import {
 } from "@chakra-ui/react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-export const MyModalTask = () => {
+export const MyModalTask = (selectedDate: Date | null) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const initialRef = React.useRef(null);
   const finalRef = React.useRef(null);
-  const [startDate, setStartDate] = useState(new Date());
-  console.log(startDate);
+  const [startDate, setDate] = useState(new Date());
+  //console.log(startDate);
   return {
     isOpen,
     onOpen,
@@ -60,8 +60,8 @@ export const MyModalTask = () => {
             <ModalBody pb={6}>
               <DatePicker
                 dateFormat="MM/dd/yyyy"
-                selected={startDate}
-                onChange={(date: Date) => setStartDate(date)}
+                selected={selectedDate}
+                onChange={(date: Date) => setDate(date)}
               />
               <Checkbox isDisabled={false}>Hecho</Checkbox>
               <FormControl mt={4}>
