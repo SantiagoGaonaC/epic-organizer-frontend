@@ -1,7 +1,5 @@
-// Componentes/Calendario.tsx
-
 import { useState } from "react";
-import Mes from "@/components/global/UI/calendar/MyMonth";
+import MyMonth from "@/components/global/UI/calendar/MyMonth";
 import {
   Box,
   useColorModeValue,
@@ -11,33 +9,33 @@ import {
   Center,
 } from "@chakra-ui/react";
 
-interface CalendarioProps {
+interface ICalendarProps {
   // props si los hay
 }
 
-export const obtenerNombreDelMes = (fecha: Date): string => {
+export const getNameOfMonth = (fecha: Date): string => {
   return fecha.toLocaleString("es-ES", {
     month: "long",
     year: "numeric",
   });
 };
 
-const MyCalendar = (props: CalendarioProps) => {
-  const [mesActual, setMesActual] = useState(new Date());
+const MyCalendar = (props: ICalendarProps) => {
+  const [monthViewed, setmonthViewed] = useState(new Date());
 
-  const cambiarMes = (incremento: number) => {
-    setMesActual((prevMesActual) => {
-      const nuevoMes = new Date(prevMesActual);
-      nuevoMes.setMonth(prevMesActual.getMonth() + incremento);
-      return nuevoMes;
+  const cambiarMes = (increase: number) => {
+    setmonthViewed((getCurrentMonth) => {
+      const newMonth = new Date(getCurrentMonth);
+      newMonth.setMonth(getCurrentMonth.getMonth() + increase);
+      return newMonth;
     });
   };
 
-  const irAlMesActual = () => {
-    setMesActual(new Date());
+  const goToCurrentMonth = () => {
+    setmonthViewed(new Date());
   };
 
-  const nombreDelMes = obtenerNombreDelMes(mesActual);
+  const nameMonthViewed = getNameOfMonth(monthViewed);
 
   return (
     <Box
@@ -47,7 +45,7 @@ const MyCalendar = (props: CalendarioProps) => {
     >
       <div className="border-2 border-gray-400">
         <Center margin={3}>
-          <p className="text-xl uppercase tracking-wide ">{nombreDelMes}</p>
+          <p className="text-xl uppercase tracking-wide ">{nameMonthViewed}</p>
         </Center>
         <Center>
           <Stack margin={3}>
@@ -68,7 +66,7 @@ const MyCalendar = (props: CalendarioProps) => {
                 colorScheme="gray"
                 variant="outline"
                 color="white"
-                onClick={irAlMesActual}
+                onClick={goToCurrentMonth}
                 rounded={"full"}
                 _hover={{
                   bg: "gray.700",
@@ -91,7 +89,7 @@ const MyCalendar = (props: CalendarioProps) => {
             </ButtonGroup>
           </Stack>
         </Center>
-        <Mes mes={mesActual} />
+        <MyMonth month={monthViewed} />
       </div>
     </Box>
   );

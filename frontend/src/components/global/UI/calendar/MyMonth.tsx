@@ -1,15 +1,15 @@
 // Componentes/Mes.tsx
 import { useEffect, useState } from "react";
-import Dia from "@/components/global/UI/calendar/MyDay";
-import Semana from "@/components/global/UI/calendar/MyWeek";
+import MyDay from "@/components/global/UI/calendar/MyDay";
+import Week from "@/components/global/UI/calendar/MyWeek";
 import MyColumnHead from "@/components/global/UI/calendar/MyColumnHead";
 import axios from "axios";
 
-interface MesProps {
-  mes: Date;
+interface IMonthProps {
+  month: Date;
 }
 
-interface Tarea {
+interface ITask {
   _id: string;
   task_title: string;
   toggle: boolean;
@@ -20,118 +20,118 @@ interface Tarea {
   __v: number;
 }
 
-const Mes = ({ mes }: MesProps) => {
-  const [tareas, setTareas] = useState<Tarea[]>([]);
-  const [fechaSeleccionada, setFechaSeleccionada] = useState<Date | null>(null);
+const MyMonth = ({ month }: IMonthProps) => {
+  const [task, setTask] = useState<ITask[]>([]);
+  const [selectedDate, setselectedDate] = useState<Date | null>(null);
 
-  const handleSeleccionarFecha = (dia: number) => {
-    const nuevaFecha = new Date(mes.getFullYear(), mes.getMonth(), dia);
-    setFechaSeleccionada(nuevaFecha);
+  const handleSelectDate = (dia: number) => {
+    const newDate = new Date(month.getFullYear(), month.getMonth(), dia);
+    setselectedDate(newDate);
   };
   useEffect(() => {
-    const obtenerTareas = async () => {
+    const getTask = async () => {
       axios.defaults.withCredentials = true;
       const res = await axios.get("http://localhost:4000/api/calendar/view", {
         withCredentials: true,
       });
 
-      setTareas(res.data.tasks);
+      setTask(res.data.tasks);
     };
 
-    obtenerTareas();
-  }, [mes]);
+    getTask();
+  }, [month]);
 
-  const diasEnMes = new Date(
-    mes.getFullYear(),
-    mes.getMonth() + 1,
+  const daysInMonth = new Date(
+    month.getFullYear(),
+    month.getMonth() + 1,
     0
   ).getDate();
 
-  const primerDiaDelMes = new Date(
-    mes.getFullYear(),
-    mes.getMonth(),
+  const firstDayOfMonth = new Date(
+    month.getFullYear(),
+    month.getMonth(),
     1
   ).getDay();
 
-  const ultimoDiaMesAnterior = new Date(
-    mes.getFullYear(),
-    mes.getMonth(),
+  const lastDayOfPreviousMonth = new Date(
+    month.getFullYear(),
+    month.getMonth(),
     0
   ).getDate();
 
-  const ultimoDiaDelMes = new Date(
-    mes.getFullYear(),
-    mes.getMonth() + 1,
+  const lastDayOfMonth = new Date(
+    month.getFullYear(),
+    month.getMonth() + 1,
     0
   ).getDay();
 
-  const dias = [];
+  const days = [];
 
-  for (let i = 0; i < primerDiaDelMes; i++) {
+  for (let i = 0; i < firstDayOfMonth; i++) {
     // Días del mes anterior
-    dias.unshift(
-      <Dia
-        key={`prev-${ultimoDiaMesAnterior - i}`}
-        dia={ultimoDiaMesAnterior - i}
-        tareas={[]}
-        onSeleccionarFecha={handleSeleccionarFecha}
+    days.unshift(
+      <MyDay
+        key={`prev-${lastDayOfPreviousMonth - i}`}
+        day={lastDayOfPreviousMonth - i}
+        task={[]}
+        onSelectDate={handleSelectDate}
       />
     );
   }
 
-  for (let i = 1; i <= diasEnMes; i++) {
+  for (let i = 1; i <= daysInMonth; i++) {
     // Buscar todas las tareas para este día
-    const tareasDelDia = tareas.filter((tarea) => {
-      const fechaDeTareaParts = tarea.date.split("T")[0].split("-");
-      const fechaDeTarea = new Date(
-        parseInt(fechaDeTareaParts[0]),
-        parseInt(fechaDeTareaParts[1]) - 1,
-        parseInt(fechaDeTareaParts[2])
+    const dailyTasks = task.filter((tarea) => {
+      const taskDateParts = tarea.date.split("T")[0].split("-");
+      const taskDate = new Date(
+        parseInt(taskDateParts[0]),
+        parseInt(taskDateParts[1]) - 1,
+        parseInt(taskDateParts[2])
       );
       return (
-        fechaDeTarea.getDate() === i &&
-        fechaDeTarea.getMonth() === mes.getMonth() &&
-        fechaDeTarea.getFullYear() === mes.getFullYear()
+        taskDate.getDate() === i &&
+        taskDate.getMonth() === month.getMonth() &&
+        taskDate.getFullYear() === month.getFullYear()
       );
     });
 
-    dias.push(
-      <Dia
+    days.push(
+      <MyDay
         key={i}
-        dia={i}
-        mes={mes.getMonth()}
-        anio={mes.getFullYear()}
-        tareas={tareasDelDia}
-        fechaSeleccionada={fechaSeleccionada}
-        onSeleccionarFecha={handleSeleccionarFecha}
+        day={i}
+        month={month.getMonth()}
+        year={month.getFullYear()}
+        task={dailyTasks}
+        selectedDate={selectedDate}
+        onSelectDate={handleSelectDate}
       />
     );
   }
 
-  for (let i = 1; i <= 6 - ultimoDiaDelMes; i++) {
-    dias.push(
-      <Dia
+  for (let i = 1; i <= 6 - lastDayOfMonth; i++) {
+    days.push(
+      <MyDay
         key={`next-${i}`}
-        dia={i}
-        tareas={[]}
-        onSeleccionarFecha={handleSeleccionarFecha}
+        day={i}
+        task={[]}
+        onSelectDate={handleSelectDate}
       />
     );
   }
 
-  const semanas = [];
-  for (let i = 0; i < dias.length; i += 7) {
-    semanas.push(dias.slice(i, i + 7));
+  const weeks = [];
+  for (let i = 0; i < days.length; i += 7) {
+    weeks.push(days.slice(i, i + 7));
   }
 
   return (
     <div>
       <MyColumnHead />
-      {semanas.map((semana, i) => (
-        <Semana key={i} dias={semana} />
+      {weeks.map((week, i) => (
+        <Week key={i} days={week} />
       ))}
     </div>
   );
 };
 
-export default Mes;
+export default MyMonth;

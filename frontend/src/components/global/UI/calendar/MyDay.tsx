@@ -2,7 +2,7 @@
 import { Flex, Button, Checkbox } from "@chakra-ui/react";
 import { MyInsertTask } from "./entites/MyInsertTask";
 
-interface Tarea {
+interface ITarea {
   _id: string;
   task_title: string;
   toggle: boolean;
@@ -13,28 +13,28 @@ interface Tarea {
   __v: number;
 }
 
-interface DiaProps {
-  dia: number;
-  mes?: number;
-  anio?: number;
-  tareas: Tarea[];
-  fechaSeleccionada?: Date | null;
-  onSeleccionarFecha: (dia: number) => void;
+interface IMyDayProps {
+  day: number;
+  month?: number;
+  year?: number;
+  task: ITarea[];
+  selectedDate?: Date | null;
+  onSelectDate: (dia: number) => void;
 }
 
-const Dia = ({
-  dia,
-  mes,
-  anio,
-  tareas,
-  fechaSeleccionada,
-  onSeleccionarFecha,
-}: DiaProps) => {
+const MyDay = ({
+  day,
+  month,
+  year,
+  task,
+  selectedDate,
+  onSelectDate,
+}: IMyDayProps) => {
   const handleClick = () => {
-    onSeleccionarFecha(dia);
+    onSelectDate(day);
   };
-  console.log(fechaSeleccionada);
-  const isSelected = fechaSeleccionada?.getDate() === dia;
+  console.log(selectedDate);
+  const isSelected = selectedDate?.getDate() === day;
 
   return (
     <Flex
@@ -57,24 +57,24 @@ const Dia = ({
           left: "4px",
         }}
       >
-        {dia}
+        {day}
       </span>
       <div className="mt-7">
-        {tareas.map((tarea, index) => (
+        {task.map((task, index) => (
           <div
             key={index}
             className="m-1 list-outside border p-1 text-left text-xs "
           >
-            <Checkbox id={tarea._id} defaultChecked={tarea.toggle}>
-              {tarea.task_title}
+            <Checkbox id={task._id} defaultChecked={task.toggle}>
+              {task.task_title}
             </Checkbox>
-            <div className="p-1">{tarea.category}</div>
+            <div className="p-1">{task.category}</div>
           </div>
         ))}
       </div>
-      <MyInsertTask />
+      <MyInsertTask selectedDate={selectedDate} />
     </Flex>
   );
 };
 
-export default Dia;
+export default MyDay;
