@@ -22,7 +22,12 @@ interface Tarea {
 
 const Mes = ({ mes }: MesProps) => {
   const [tareas, setTareas] = useState<Tarea[]>([]);
+  const [fechaSeleccionada, setFechaSeleccionada] = useState<Date | null>(null);
 
+  const handleSeleccionarFecha = (dia: number) => {
+    const nuevaFecha = new Date(mes.getFullYear(), mes.getMonth(), dia);
+    setFechaSeleccionada(nuevaFecha);
+  };
   useEffect(() => {
     const obtenerTareas = async () => {
       axios.defaults.withCredentials = true;
@@ -69,6 +74,7 @@ const Mes = ({ mes }: MesProps) => {
         key={`prev-${ultimoDiaMesAnterior - i}`}
         dia={ultimoDiaMesAnterior - i}
         tareas={[]}
+        onSeleccionarFecha={handleSeleccionarFecha}
       />
     );
   }
@@ -89,11 +95,28 @@ const Mes = ({ mes }: MesProps) => {
       );
     });
 
-    dias.push(<Dia key={i} dia={i} tareas={tareasDelDia} />);
+    dias.push(
+      <Dia
+        key={i}
+        dia={i}
+        mes={mes.getMonth()}
+        anio={mes.getFullYear()}
+        tareas={tareasDelDia}
+        fechaSeleccionada={fechaSeleccionada}
+        onSeleccionarFecha={handleSeleccionarFecha}
+      />
+    );
   }
 
   for (let i = 1; i <= 6 - ultimoDiaDelMes; i++) {
-    dias.push(<Dia key={`next-${i}`} dia={i} tareas={[]} />);
+    dias.push(
+      <Dia
+        key={`next-${i}`}
+        dia={i}
+        tareas={[]}
+        onSeleccionarFecha={handleSeleccionarFecha}
+      />
+    );
   }
 
   const semanas = [];

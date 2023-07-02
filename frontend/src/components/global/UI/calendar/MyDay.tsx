@@ -15,13 +15,32 @@ interface Tarea {
 
 interface DiaProps {
   dia: number;
+  mes?: number;
+  anio?: number;
   tareas: Tarea[];
+  fechaSeleccionada?: Date | null;
+  onSeleccionarFecha: (dia: number) => void;
 }
 
-const Dia = ({ dia, tareas }: DiaProps) => {
+const Dia = ({
+  dia,
+  mes,
+  anio,
+  tareas,
+  fechaSeleccionada,
+  onSeleccionarFecha,
+}: DiaProps) => {
+  const handleClick = () => {
+    onSeleccionarFecha(dia);
+  };
+  console.log(fechaSeleccionada);
+  const isSelected = fechaSeleccionada?.getDate() === dia;
+
   return (
     <Flex
-      className="aspect-content flex-grow border border-gray-200"
+      className={`aspect-content flex-grow border border-gray-200 ${
+        isSelected ? "bg-blue-200" : ""
+      }`}
       style={{
         flexBasis: "14.2857%",
         flexShrink: 0,
@@ -29,6 +48,7 @@ const Dia = ({ dia, tareas }: DiaProps) => {
       }}
       direction="column"
       position="relative"
+      onClick={handleClick}
     >
       <span
         style={{
