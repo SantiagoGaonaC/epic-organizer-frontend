@@ -1,5 +1,4 @@
-// Componentes/Mes.tsx
-import { useEffect, useState } from "react";
+import { useEffect, useState, Dispatch } from "react";
 import MyDay from "@/components/global/UI/calendar/MyDay";
 import Week from "@/components/global/UI/calendar/MyWeek";
 import MyColumnHead from "@/components/global/UI/calendar/MyColumnHead";
@@ -7,9 +6,10 @@ import axios from "axios";
 
 interface IMonthProps {
   month: Date;
+  setTasks: Dispatch<React.SetStateAction<ITask[]>>;
 }
 
-interface ITask {
+export interface ITask {
   _id: string;
   task_title: string;
   toggle: boolean;
@@ -20,26 +20,33 @@ interface ITask {
   __v: number;
 }
 
-const MyMonth = ({ month }: IMonthProps) => {
-  const [task, setTask] = useState<ITask[]>([]);
+const MyMonth = ({ month, setTasks }: IMonthProps) => {
   const [selectedDate, setselectedDate] = useState<Date | null>(null);
+  const [tasks, setFetchedTasks] = useState<ITask[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const handleSelectDate = (dia: number) => {
-    const newDate = new Date(month.getFullYear(), month.getMonth(), dia);
-    setselectedDate(newDate);
-  };
-  useEffect(() => {
-    const getTask = async () => {
-      axios.defaults.withCredentials = true;
+  const fetchTasks = async (): Promise<ITask[]> => {
+    try {
       const res = await axios.get("http://localhost:4000/api/calendar/view", {
         withCredentials: true,
       });
+      setFetchedTasks(res.data.tasks);
+      setLoading(false);
+      return res.data.tasks; // Asegúrate de devolver los datos de las tareas aquí
+    } catch (error: unknown) {
+      console.log("Error fetching tasks:", error);
+      return []; // Devuelve un array vacío en caso de error
+    }
+  };
 
-      setTask(res.data.tasks);
-    };
+  useEffect(() => {
+    fetchTasks();
+  }, []);
 
-    getTask();
-  }, [month]);
+  const handleSelectDate = (dia: number) => {
+    setselectedDate(new Date(month.getFullYear(), month.getMonth(), dia));
+    fetchTasks(); // Fetch tasks after changing the selected date
+  };
 
   const daysInMonth = new Date(
     month.getFullYear(),
@@ -73,15 +80,17 @@ const MyMonth = ({ month }: IMonthProps) => {
       <MyDay
         key={`prev-${lastDayOfPreviousMonth - i}`}
         day={lastDayOfPreviousMonth - i}
-        task={[]}
+        tasks={[]}
+        setTasks={setTasks}
         onSelectDate={handleSelectDate}
+        fetchTasks={fetchTasks} // Pasa fetchTasks al componente MyDay
       />
     );
   }
 
   for (let i = 1; i <= daysInMonth; i++) {
     // Buscar todas las tareas para este día
-    const dailyTasks = task.filter((tarea) => {
+    const dailyTasks = tasks.filter((tarea) => {
       const taskDateParts = tarea.date.split("T")[0].split("-");
       const taskDate = new Date(
         parseInt(taskDateParts[0]),
@@ -101,9 +110,11 @@ const MyMonth = ({ month }: IMonthProps) => {
         day={i}
         month={month.getMonth()}
         year={month.getFullYear()}
-        task={dailyTasks}
+        tasks={dailyTasks}
+        setTasks={setTasks}
         selectedDate={selectedDate}
         onSelectDate={handleSelectDate}
+        fetchTasks={fetchTasks} // Pasa fetchTasks al componente MyDay
       />
     );
   }
@@ -113,8 +124,10 @@ const MyMonth = ({ month }: IMonthProps) => {
       <MyDay
         key={`next-${i}`}
         day={i}
-        task={[]}
+        tasks={[]}
+        setTasks={setTasks}
         onSelectDate={handleSelectDate}
+        fetchTasks={fetchTasks} // Pasa fetchTasks al componente MyDay
       />
     );
   }
@@ -127,9 +140,11 @@ const MyMonth = ({ month }: IMonthProps) => {
   return (
     <div>
       <MyColumnHead />
-      {weeks.map((week, i) => (
-        <Week key={i} days={week} />
-      ))}
+      {loading ? (
+        <div>Loading...</div> // Display a loading state while tasks are being fetched
+      ) : (
+        weeks.map((week, i) => <Week key={i} days={week} />)
+      )}
     </div>
   );
 };

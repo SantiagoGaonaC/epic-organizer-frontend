@@ -1,13 +1,28 @@
 import { AddIcon } from "@chakra-ui/icons";
 import { IconButton, useColorModeValue } from "@chakra-ui/react";
-import { MyModalTask } from "./MyModalTask";
+import { useMyModalTask } from "./useMyModalTask";
+import { ITask } from "../MyMonth";
+import { useEffect } from "react";
 
 export const MyInsertTask = ({
   selectedDate,
+  setTasks,
+  fetchTasks,
 }: {
   selectedDate?: Date | null;
+  setTasks: React.Dispatch<React.SetStateAction<ITask[]>>;
+  fetchTasks: () => Promise<ITask[]>;
 }) => {
-  const { onOpen, ModalComponent } = MyModalTask(selectedDate ?? new Date());
+  const {
+    onOpen,
+    ModalComponent,
+    selectedDate: modalSelectedDate,
+    setSelectedDate: setModalSelectedDate,
+  } = useMyModalTask(selectedDate || undefined, setTasks, fetchTasks);
+
+  useEffect(() => {
+    setModalSelectedDate(selectedDate === undefined ? null : selectedDate); // Update the selectedDate in the useMyModalTask hook
+  }, [selectedDate, setModalSelectedDate]);
 
   return (
     <>

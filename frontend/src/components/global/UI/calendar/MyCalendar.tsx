@@ -1,5 +1,5 @@
 import { useState } from "react";
-import MyMonth from "@/components/global/UI/calendar/MyMonth";
+import MyMonth, { ITask } from "@/components/global/UI/calendar/MyMonth";
 import {
   Box,
   useColorModeValue,
@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react";
 
 interface ICalendarProps {
-  // props si los hay
+  // props if any
 }
 
 export const getNameOfMonth = (fecha: Date): string => {
@@ -22,6 +22,7 @@ export const getNameOfMonth = (fecha: Date): string => {
 
 const MyCalendar = (props: ICalendarProps) => {
   const [monthViewed, setmonthViewed] = useState(new Date());
+  const [tasks, setTasks] = useState<ITask[]>([]);
 
   const cambiarMes = (increase: number) => {
     setmonthViewed((getCurrentMonth) => {
@@ -35,8 +36,6 @@ const MyCalendar = (props: ICalendarProps) => {
     setmonthViewed(new Date());
   };
 
-  const nameMonthViewed = getNameOfMonth(monthViewed);
-
   return (
     <Box
       bg={useColorModeValue("gray.800", "gray.100")}
@@ -45,7 +44,9 @@ const MyCalendar = (props: ICalendarProps) => {
     >
       <div className="border-2 border-gray-400">
         <Center margin={3}>
-          <p className="text-xl uppercase tracking-wide ">{nameMonthViewed}</p>
+          <p className="text-xl uppercase tracking-wide ">
+            {getNameOfMonth(monthViewed)}
+          </p>
         </Center>
         <Center>
           <Stack margin={3}>
@@ -89,7 +90,7 @@ const MyCalendar = (props: ICalendarProps) => {
             </ButtonGroup>
           </Stack>
         </Center>
-        <MyMonth month={monthViewed} />
+        <MyMonth month={monthViewed} setTasks={setTasks} />
       </div>
     </Box>
   );
