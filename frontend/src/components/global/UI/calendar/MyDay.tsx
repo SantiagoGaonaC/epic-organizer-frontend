@@ -1,6 +1,6 @@
-// Componentes/Dia.tsx
-import { Flex, Button, Checkbox } from "@chakra-ui/react";
+import { Flex, Checkbox } from "@chakra-ui/react";
 import { MyInsertTask } from "./entites/MyInsertTask";
+import { ITask } from "./MyMonth";
 
 interface ITarea {
   _id: string;
@@ -17,23 +17,27 @@ interface IMyDayProps {
   day: number;
   month?: number;
   year?: number;
-  task: ITarea[];
+  tasks: ITarea[];
+  setTasks: React.Dispatch<React.SetStateAction<ITarea[]>>;
   selectedDate?: Date | null;
   onSelectDate: (dia: number) => void;
+  fetchTasks: () => Promise<ITask[]>; // Ajusta el tipo de la prop fetchTasks
 }
 
 const MyDay = ({
   day,
   month,
   year,
-  task,
+  tasks,
+  setTasks,
   selectedDate,
   onSelectDate,
+  fetchTasks,
 }: IMyDayProps) => {
   const handleClick = () => {
     onSelectDate(day);
   };
-  console.log(selectedDate);
+
   const isSelected = selectedDate?.getDate() === day;
 
   return (
@@ -60,9 +64,9 @@ const MyDay = ({
         {day}
       </span>
       <div className="mt-7">
-        {task.map((task, index) => (
+        {tasks.map((task) => (
           <div
-            key={index}
+            key={task._id}
             className="m-1 list-outside border p-1 text-left text-xs "
           >
             <Checkbox id={task._id} defaultChecked={task.toggle}>
@@ -72,7 +76,11 @@ const MyDay = ({
           </div>
         ))}
       </div>
-      <MyInsertTask selectedDate={selectedDate} />
+      <MyInsertTask
+        selectedDate={selectedDate}
+        setTasks={setTasks}
+        fetchTasks={fetchTasks}
+      />
     </Flex>
   );
 };
