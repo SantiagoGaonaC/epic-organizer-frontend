@@ -1,10 +1,4 @@
 import Express from "express";
-import {
-  login,
-  generateCode,
-  registerUser,
-  activateUser,
-} from "../controllers/auth";
 import validateRequest from "../middlewares/validateRequest";
 import {
   ActivationSchema,
@@ -12,6 +6,10 @@ import {
   RegisterSchema,
   CodeParamsSchema,
 } from "../schemas/auth";
+import { login } from "../controllers/auth/login";
+import { generateCode } from "../controllers/auth/generateCode";
+import { registerUser } from "../controllers/auth/registerUser";
+import { activateUser } from "../controllers/auth/activateUser";
 
 const router = Express.Router();
 

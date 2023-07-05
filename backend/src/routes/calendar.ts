@@ -1,10 +1,4 @@
 import Express from "express";
-import {
-  getTask,
-  createTask,
-  updateTask,
-  deleteTask,
-} from "../controllers/calendar";
 import { validateUser } from "../middlewares/auth";
 import validateRequest from "../middlewares/validateRequest";
 import {
@@ -12,6 +6,10 @@ import {
   DeleteTaskSchema,
   UpdateTaskSchema,
 } from "../schemas/calendar";
+import { createTask } from "../controllers/calendar/createTask";
+import { getTask } from "../controllers/calendar/getTask";
+import { updateTask } from "../controllers/calendar/updateTask";
+import { deleteTask } from "../controllers/calendar/deleteTask";
 
 const router = Express.Router();
 

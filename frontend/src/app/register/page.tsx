@@ -16,7 +16,7 @@ import { env } from "@/env";
 import { useState, useEffect } from "react";
 import MyStepRegister from "@/components/global/UI/register/MyStepRegister";
 import MyStepRegCode from "@/components/global/UI/register/MyStepRegCode";
-import { RegistrationValues } from "@/schemas/RegisterSchema";
+import { RegistrationValues } from "@/models/RegisterSchema";
 
 const Register: NextPage = () => {
   const white = useColorModeValue("white", "white");

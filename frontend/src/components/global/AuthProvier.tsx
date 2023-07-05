@@ -6,7 +6,7 @@ import {
   useEffect,
   useState,
 } from "react";
-import { TokenPayload } from "../../schemas/AuthSchema";
+import { TokenPayload } from "../../models/AuthSchema";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { Flex, Spinner } from "@chakra-ui/react";

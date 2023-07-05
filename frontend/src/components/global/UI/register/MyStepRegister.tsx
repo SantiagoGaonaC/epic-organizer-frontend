@@ -5,7 +5,7 @@ import { z } from "zod";
 import {
   RegistrationValues,
   registrationSchema,
-} from "@/schemas/RegisterSchema";
+} from "@/models/RegisterSchema";
 interface Props {
   onSubmit: (values: RegistrationValues) => Promise<void>;
   onError: (errors: any) => void;

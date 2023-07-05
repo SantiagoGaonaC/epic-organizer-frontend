@@ -1,5 +1,11 @@
 import nodemailer from "nodemailer";
 
+interface EmailParams {
+  to: string;
+  subject: string;
+  html: string;
+}
+
 let transporter = nodemailer.createTransport({
   host: "smtp.office365.com",
   port: 587,
@@ -9,12 +15,6 @@ let transporter = nodemailer.createTransport({
     pass: process.env.EMAIL_PASSWORD,
   },
 });
-
-interface EmailParams {
-  to: string;
-  subject: string;
-  html: string;
-}
 
 const sendEmail = async ({ to, subject, html }: EmailParams) => {
   try {
