@@ -1,9 +1,9 @@
-import { AuthContext, IAuthContext } from "@/components/global/AuthProvier"
-import { useContext } from "react"
+import { AuthContext, IAuthContext } from "@/context/AuthProvier";
+import { useContext } from "react";
 
 const useAuth = () => {
-    const context = useContext(AuthContext)
-    return context as IAuthContext
-}
+  const context = useContext(AuthContext);
+  return context as IAuthContext;
+};
 
-export default useAuth
+export default useAuth;

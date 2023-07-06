@@ -1,51 +1,16 @@
-import { useEffect, useState, Dispatch } from "react";
+import { useState, useContext } from "react";
 import MyDay from "@/components/global/UI/calendar/MyDay";
 import Week from "@/components/global/UI/calendar/MyWeek";
 import MyColumnHead from "@/components/global/UI/calendar/MyColumnHead";
-import axios from "axios";
-
-interface IMonthProps {
-  month: Date;
-  setTasks: Dispatch<React.SetStateAction<ITask[]>>;
-}
-
-export interface ITask {
-  _id: string;
-  task_title: string;
-  toggle: boolean;
-  category: string;
-  description: string;
-  date: string;
-  user: string;
-  __v: number;
-}
+import { IMonthProps } from "@/models/MonthProps.models";
+import { TaskContext } from "@/context/TaskContext";
 
 const MyMonth = ({ month, setTasks }: IMonthProps) => {
   const [selectedDate, setselectedDate] = useState<Date | null>(null);
-  const [tasks, setFetchedTasks] = useState<ITask[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  const fetchTasks = async (): Promise<ITask[]> => {
-    try {
-      const res = await axios.get("http://localhost:4000/api/calendar/view", {
-        withCredentials: true,
-      });
-      setFetchedTasks(res.data.tasks);
-      setLoading(false);
-      return res.data.tasks; // Asegúrate de devolver los datos de las tareas aquí
-    } catch (error: unknown) {
-      console.log("Error fetching tasks:", error);
-      return []; // Devuelve un array vacío en caso de error
-    }
-  };
-
-  useEffect(() => {
-    fetchTasks();
-  }, []);
+  const { tasks, loading, fetchTasks } = useContext(TaskContext)!;
 
   const handleSelectDate = (dia: number) => {
     setselectedDate(new Date(month.getFullYear(), month.getMonth(), dia));
-    fetchTasks(); // Fetch tasks after changing the selected date
   };
 
   const daysInMonth = new Date(

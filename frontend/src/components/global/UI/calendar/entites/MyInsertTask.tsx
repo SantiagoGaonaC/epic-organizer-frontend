@@ -1,7 +1,7 @@
 import { AddIcon } from "@chakra-ui/icons";
 import { IconButton, useColorModeValue } from "@chakra-ui/react";
 import { useMyModalTask } from "./useMyModalTask";
-import { ITask } from "../MyMonth";
+import { ITask } from "@/models/Task.models";
 import { useEffect } from "react";
 
 export const MyInsertTask = ({

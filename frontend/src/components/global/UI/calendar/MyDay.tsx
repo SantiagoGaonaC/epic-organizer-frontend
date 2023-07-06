@@ -1,28 +1,6 @@
 import { Flex, Checkbox } from "@chakra-ui/react";
 import { MyInsertTask } from "./entites/MyInsertTask";
-import { ITask } from "./MyMonth";
-
-interface ITarea {
-  _id: string;
-  task_title: string;
-  toggle: boolean;
-  category: string;
-  description: string;
-  date: string;
-  user: string;
-  __v: number;
-}
-
-interface IMyDayProps {
-  day: number;
-  month?: number;
-  year?: number;
-  tasks: ITarea[];
-  setTasks: React.Dispatch<React.SetStateAction<ITarea[]>>;
-  selectedDate?: Date | null;
-  onSelectDate: (dia: number) => void;
-  fetchTasks: () => Promise<ITask[]>; // Ajusta el tipo de la prop fetchTasks
-}
+import { IMyDayProps } from "@/models/DayProps.models";
 
 const MyDay = ({
   day,

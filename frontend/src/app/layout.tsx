@@ -1,10 +1,11 @@
 "use client";
-import { AuthProvider } from "@/components/global/AuthProvier";
+import { AuthProvider } from "@/context/AuthProvier";
 import "./globals.css";
 import theme from "@/theme/theme";
 
 import { CacheProvider } from "@chakra-ui/next-js";
 import { ChakraProvider } from "@chakra-ui/react";
+import { TaskProvider } from "@/context/TaskContext";
 
 export const metadata = {
   title: "Epic Organizer",
@@ -20,7 +21,9 @@ export default function RootLayout({
     <html lang="en" className="bg-[#171923]">
       <body>
         <AuthProvider>
-          <ChakraProvider theme={theme}>{children}</ChakraProvider>
+          <TaskProvider>
+            <ChakraProvider theme={theme}>{children}</ChakraProvider>
+          </TaskProvider>
         </AuthProvider>
       </body>
     </html>
