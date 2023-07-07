@@ -1,5 +1,6 @@
 import { useState } from "react";
-import MyMonth, { ITask } from "@/components/global/UI/calendar/MyMonth";
+import MyMonth from "@/components/global/UI/calendar/MyMonth";
+import { ITask } from "@/models";
 import {
   Box,
   useColorModeValue,

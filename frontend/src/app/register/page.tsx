@@ -11,71 +11,16 @@ import {
   Center,
 } from "@chakra-ui/react";
 import { NextPage } from "next";
-import axios from "axios";
-import { env } from "@/env";
-import { useState, useEffect } from "react";
 import MyStepRegister from "@/components/global/UI/register/MyStepRegister";
 import MyStepRegCode from "@/components/global/UI/register/MyStepRegCode";
-import { RegistrationValues } from "@/models/RegisterSchema";
+import useRegister from "./hooks/useRegister";
 
 const Register: NextPage = () => {
-  const white = useColorModeValue("white", "white");
-  const [apiData, setApiData] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [userExist, setUserExist] = useState(false);
-  const [step, setStep] = useState(1);
-  const [email, setEmail] = useState("");
-
-  const callApiCode = async (values: RegistrationValues) => {
-    const { firstname, lastname, email } = values;
-    console.log(firstname + " " + lastname + " " + email);
-    setLoading(true);
-    try {
-      const response = await axios.post(
-        `${env.NEXT_PUBLIC_BACKEND_BASE_URL}/auth/register`,
-        {
-          firstName: firstname,
-          lastName: lastname,
-          email: email,
-        }
-      );
-      console.log(response.data);
-      setApiData(null);
-      if (response.data.ok) {
-        // Registro exitoso
-        setEmail(email);
-        setApiData(response.data);
-        setLoading(false);
-        setUserExist(false);
-      }
-      if (response.data.message === "User already exists") {
-        setUserExist(true);
-      } else {
-        // Error en la respuesta de la API
-        setLoading(false);
-      }
-    } catch (error: any) {
-      setLoading(false);
-      // Error en la solicitud
-      if (
-        error.response &&
-        error.response.data.message === "User already exists"
-      ) {
-        setUserExist(true);
-      }
-      console.log(error.response.data.message);
-    }
-  };
+  const { callApiCode, email, loading, userExist, step } = useRegister();
 
   const onError = (errors: any) => {
     console.log({ onError: errors });
   };
-
-  useEffect(() => {
-    if (apiData && step === 1) {
-      setStep(2);
-    }
-  }, [apiData]);
 
   return (
     <Flex
@@ -86,7 +31,7 @@ const Register: NextPage = () => {
     >
       <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
         <Stack align={"center"}>
-          <Heading fontSize={"4xl"} color={white}>
+          <Heading fontSize={"4xl"} color={useColorModeValue("white", "white")}>
             Registro de usuario
           </Heading>
           <Text fontSize={"lg"} color={"gray.600"}>
@@ -99,7 +44,7 @@ const Register: NextPage = () => {
           boxShadow={"lg"}
           p={8}
         >
-          <Stack spacing={4} color={white}>
+          <Stack spacing={4} color={useColorModeValue("white", "white")}>
             {loading ? (
               <Center>
                 <Spinner />

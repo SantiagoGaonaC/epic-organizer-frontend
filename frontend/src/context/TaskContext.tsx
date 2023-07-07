@@ -1,5 +1,5 @@
 import { ReactNode, createContext, useContext } from "react";
-import { ITask } from "@/models/Task.models";
+import { ITask } from "@/models/Task.model";
 import { Flex, Spinner } from "@chakra-ui/react";
 import useFetchTasks from "@/hooks/useFetchTasks";
 

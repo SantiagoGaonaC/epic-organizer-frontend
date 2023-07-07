@@ -1,5 +1,5 @@
 import { Dispatch } from "react";
-import { ITask } from "./Task.models";
+import { ITask } from "@/models";
 
 export interface IMonthProps {
   month: Date;

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   FormControl,
   ModalBody,
@@ -18,9 +18,8 @@ import {
 } from "@chakra-ui/react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import axios from "axios";
-import { isValid } from "date-fns";
-import { ITask } from "../MyMonth";
+import { ITask } from "@/models";
+import { TaskServiceAxios } from "@/services/createTask.services";
 
 export const useMyModalTask = (
   initialSelectedDate: Date | undefined,
@@ -35,50 +34,28 @@ export const useMyModalTask = (
   );
   const [title, setTitle] = useState("");
   const [toggle, setToggle] = useState(false);
+  const taskService = new TaskServiceAxios();
 
   const handleFormSubmit = async () => {
     if (!selectedDate) {
       return;
     }
 
-    try {
-      const response = await axios.post(
-        "http://localhost:4000/api/calendar/createtask",
-        {
-          task_title: title,
-          category: "Personal",
-          description: "Ir al body",
-          date: selectedDate.toISOString(),
-          toggle: toggle,
-        },
-        {
-          withCredentials: true,
-        }
-      );
+    const newTask = await taskService.createTask(
+      title,
+      "Personal",
+      "Ir al body",
+      selectedDate.toISOString(),
+      toggle
+    );
 
-      if (response.data.ok) {
-        console.log("Tarea creada con éxito!");
-        setTitle("");
-        setToggle(false);
-        onClose();
+    setTitle("");
+    setToggle(false);
+    onClose();
 
-        fetchTasks().then((updatedTasks) => {
-          setTasks((prevTasks) => [...prevTasks, response.data.task]);
-        });
-      } else {
-        console.log("Error: Hubo un problema al crear la tarea");
-      }
-    } catch (error: unknown) {
-      if (axios.isAxiosError(error)) {
-        if (error.response) {
-          console.log("Error: " + error.response.data.message);
-        } else {
-          console.log("Error: " + error.message);
-        }
-      } else {
-        console.log("Error desconocido: ", error);
-      }
-    }
+    fetchTasks().then((updatedTasks) => {
+      setTasks((prevTasks) => [...prevTasks, newTask]);
+    });
   };
 
   const onSubmit = () => {

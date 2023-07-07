@@ -1,18 +1,14 @@
 import { AddIcon } from "@chakra-ui/icons";
 import { IconButton, useColorModeValue } from "@chakra-ui/react";
 import { useMyModalTask } from "./useMyModalTask";
-import { ITask } from "@/models/Task.models";
 import { useEffect } from "react";
+import { IMyInsertTaskProps } from "@/models";
 
 export const MyInsertTask = ({
   selectedDate,
   setTasks,
   fetchTasks,
-}: {
-  selectedDate?: Date | null;
-  setTasks: React.Dispatch<React.SetStateAction<ITask[]>>;
-  fetchTasks: () => Promise<ITask[]>;
-}) => {
+}: IMyInsertTaskProps) => {
   const {
     onOpen,
     ModalComponent,

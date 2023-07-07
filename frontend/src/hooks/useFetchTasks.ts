@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { fetchTasks as fetchTasksService } from "@/services/public.services";
-import { ITask } from "@/models/Task.models";
+import { ITask } from "@/models";
 
 const useFetchTasks = (): [ITask[], boolean, () => Promise<ITask[]>] => {
   const [tasks, setTasks] = useState<ITask[]>([]);

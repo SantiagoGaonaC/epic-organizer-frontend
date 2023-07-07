@@ -2,7 +2,7 @@ import { useState, useContext } from "react";
 import MyDay from "@/components/global/UI/calendar/MyDay";
 import Week from "@/components/global/UI/calendar/MyWeek";
 import MyColumnHead from "@/components/global/UI/calendar/MyColumnHead";
-import { IMonthProps } from "@/models/MonthProps.models";
+import { IMonthProps } from "@/models/Month.props.model";
 import { TaskContext } from "@/context/TaskContext";
 
 const MyMonth = ({ month, setTasks }: IMonthProps) => {

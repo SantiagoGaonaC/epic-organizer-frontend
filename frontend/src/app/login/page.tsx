@@ -11,28 +11,28 @@ import {
   ButtonGroup,
   Center,
   Link,
-  useToast,
 } from "@chakra-ui/react";
 import { NextPage } from "next";
-import axios from "axios";
-import { env } from "@/env";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { CheckIcon } from "@chakra-ui/icons";
-import { LoginValues, LoginSchema } from "@/models/AuthSchema";
-import useAuth from "@/hooks/useAuth";
+import { LoginSchema } from "@/models/AuthSchema";
 import MyForm from "@/components/global/UI/entities/forms/MyForm";
 import MyInput from "@/components/global/UI/entities/input/MyInput";
+import { getErrorMessages } from "@/utilities/error.msg.utilities";
+import { useLogin } from "./hooks";
+import { useCodeRequest } from "./hooks";
+import { AuthServiceAxios } from "./services";
 
 const Login: NextPage = () => {
   const white = useColorModeValue("white", "white");
   const [noActiveUser, setNoActiveUser] = useState(false);
   const [emailCodeIncorrect, setEmailCodeIncorrect] = useState(false);
   const [emailNotFound, setEmailNotFound] = useState(false);
-  const [emailValue, setEmailValue] = useState("");
   const [errLogin, setErrLogin] = useState(false);
-  const toast = useToast();
-  const { setUser } = useAuth();
+  const { onSubmit } = useLogin();
+  const authService = new AuthServiceAxios();
+  const { emailValue, setEmailValue, handleCodeRequest } =
+    useCodeRequest(authService);
 
   const resetStates = () => {
     setNoActiveUser(false);
@@ -41,101 +41,19 @@ const Login: NextPage = () => {
     setEmailNotFound(false);
   };
 
-  const onSubmit = async (values: LoginValues) => {
-    const { email, code } = values;
-    console.log({ email, code });
-    resetStates();
-
-    try {
-      const response = await axios.post(
-        `${env.NEXT_PUBLIC_BACKEND_BASE_URL}/auth/login/${email}`,
-        { code },
-        { withCredentials: true }
-      );
-
-      if (response.data.ok) {
-        const tokenPayload = response.data.data;
-        localStorage.setItem("user", JSON.stringify(tokenPayload));
-        setUser(tokenPayload);
-        router.push("/calendar");
-      } else {
-        console.log("Error: Error en el inicio de sesión");
-        setErrLogin(true);
-      }
-    } catch (error: unknown) {
-      if (axios.isAxiosError(error)) {
-        if (error.response) {
-          switch (error.response.status) {
-            case 403:
-              console.log("Usuario no activado");
-              setNoActiveUser(true);
-              break;
-            case 404:
-              if (error.response.data.message === "User not found") {
-                setEmailNotFound(true);
-              } else {
-                console.log("Email o código incorrecto");
-                setEmailCodeIncorrect(true);
-              }
-              break;
-            default:
-              console.log("Error: " + error);
-              setErrLogin(true);
-          }
-        } else {
-          console.log("Error: " + error);
-          setErrLogin(true);
-        }
-      } else {
-        console.log("Error: " + error);
-        setErrLogin(true);
-      }
-    }
-  };
-
-  const getCode = async (email: string) => {
-    console.log({ email });
-    try {
-      const response = await axios.post(
-        `${env.NEXT_PUBLIC_BACKEND_BASE_URL}/auth/login/${email}/code`
-      );
-      if (response.data.ok) {
-        toast({
-          description: response.data.message,
-          status: "success",
-          icon: <CheckIcon />,
-          position: "top",
-        });
-      } else {
-        console.log("Error: Error al obtener el código");
-      }
-    } catch (error: unknown) {
-      if (axios.isAxiosError(error)) {
-        if (error.response) {
-          console.log("Error: " + error.response.data.message);
-        } else {
-          console.log("Error: " + error);
-        }
-      } else {
-        console.log("Error: " + error);
-      }
-    }
-  };
-
   const onError = (errors: any) => {
     resetStates();
     console.log({ errors: errors });
   };
 
+  const errorMessages = getErrorMessages(
+    noActiveUser,
+    emailCodeIncorrect,
+    errLogin,
+    emailNotFound
+  );
+
   const router = useRouter();
-
-  const errorMessages = [
-    { condition: noActiveUser, message: "Usuario no activo" },
-    { condition: emailCodeIncorrect, message: "Email o código incorrecto" },
-    { condition: errLogin, message: "Error en el inicio de sesión" },
-    { condition: emailNotFound, message: "El email no existe" },
-  ];
-
   return (
     <Flex
       minH={"100vh"}
@@ -189,7 +107,7 @@ const Login: NextPage = () => {
                     bg: "gray.700",
                   }}
                   type="submit"
-                  onClick={() => getCode(emailValue)}
+                  onClick={handleCodeRequest}
                 >
                   Quiero un código
                 </Button>

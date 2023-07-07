@@ -1,6 +1,6 @@
 import { Flex, Checkbox } from "@chakra-ui/react";
 import { MyInsertTask } from "./entites/MyInsertTask";
-import { IMyDayProps } from "@/models/DayProps.models";
+import { IMyDayProps } from "@/models/Day.props.model";
 
 const MyDay = ({
   day,

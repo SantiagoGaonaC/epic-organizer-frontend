@@ -1,7 +1,6 @@
 "use client";
-import { Button, Flex, MenuItem } from "@chakra-ui/react";
-import React, { useContext } from "react";
-import { AuthContext } from "../../context/AuthProvier";
+import { MenuItem } from "@chakra-ui/react";
+import React from "react";
 import useAuth from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 

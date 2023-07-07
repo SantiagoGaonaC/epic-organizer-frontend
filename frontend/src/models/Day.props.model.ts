@@ -1,4 +1,4 @@
-import { ITask } from "./Task.models";
+import { ITask } from "@/models";
 
 export interface IMyDayProps {
   day: number;
@@ -8,5 +8,5 @@ export interface IMyDayProps {
   setTasks: React.Dispatch<React.SetStateAction<ITask[]>>;
   selectedDate?: Date | null;
   onSelectDate: (dia: number) => void;
-  fetchTasks: () => Promise<ITask[]>; // Ajusta el tipo de la prop fetchTasks
+  fetchTasks: () => Promise<ITask[]>;
 }
