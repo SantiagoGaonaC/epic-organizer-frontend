@@ -2,10 +2,10 @@ import { Response } from "express";
 import TaskModel from "../../models/calendar";
 export const createTask = async (req: any, res: Response) => {
   try {
-    const { task_title, category, description, date } = req.body;
+    const { task_title, category, description, date, toggle } = req.body;
     const createTask = await TaskModel.create({
       task_title,
-      toggle: false,
+      toggle: toggle,
       category,
       description,
       date,

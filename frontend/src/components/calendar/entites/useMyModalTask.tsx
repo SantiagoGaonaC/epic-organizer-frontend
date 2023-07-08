@@ -108,7 +108,7 @@ export const useMyModalTask = (
             />
             <Checkbox
               isDisabled={false}
-              onChange={(event) => setToggle(event.target.checked)}
+              onChange={(e) => setToggle(e.target.checked)}
             >
               Hecho
             </Checkbox>
