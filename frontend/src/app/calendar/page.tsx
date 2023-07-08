@@ -1,7 +1,5 @@
 "use client";
-import AppHeader from "@/components/global/AppHeader";
-import MyNavbar from "@/components/global/UI/navbar/MyNavbar";
-import MyCalendar from "@/components/global/UI/calendar/MyCalendar";
+import { MyCalendar, MyNavbar, AppHeader } from "@/components/";
 
 export default function Calendar() {
   return (

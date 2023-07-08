@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { useToast } from "@chakra-ui/react";
-import { AuthServiceAxios, IAuthService } from "../services/auth.login.services";
 import { CheckIcon } from "@chakra-ui/icons";
-
+import { IAuthService } from "../models";
 export const useCodeRequest = (authService: IAuthService) => {
   const toast = useToast();
   const [emailValue, setEmailValue] = useState("");
@@ -29,4 +28,3 @@ export const useCodeRequest = (authService: IAuthService) => {
     handleCodeRequest,
   };
 };
-

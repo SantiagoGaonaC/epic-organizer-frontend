@@ -1,5 +1,5 @@
 import { useState } from "react";
-import MyMonth from "@/components/global/UI/calendar/MyMonth";
+import { MyMonth } from "@/components";
 import { ITask } from "@/models";
 import {
   Box,

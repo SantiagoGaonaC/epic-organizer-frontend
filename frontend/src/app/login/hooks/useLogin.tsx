@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 import { useToast } from "@chakra-ui/react";
 import { LoginValues } from "@/models/AuthSchema";
 import useAuth from "@/hooks/useAuth";
-import { loginAxios } from "../services/getCode.login.services";
+import { loginAxios } from "../services";
 import { AxiosError } from "axios";
 
 const useLogin = () => {
@@ -69,7 +69,16 @@ const useLogin = () => {
     }
   };
 
-  return { onSubmit };
+  return {
+    onSubmit,
+    state: {
+      noActiveUser,
+      emailCodeIncorrect,
+      emailNotFound,
+      errLogin,
+    },
+    resetStates,
+  };
 };
 
 export default useLogin;

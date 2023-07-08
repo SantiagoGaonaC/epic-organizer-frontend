@@ -8,6 +8,6 @@ export const getErrorMessages = (
     { condition: noActiveUser, message: "Usuario no activo" },
     { condition: emailCodeIncorrect, message: "Email o código incorrecto" },
     { condition: errLogin, message: "Error en el inicio de sesión" },
-    { condition: emailNotFound, message: "El email no existe" },
+    { condition: emailNotFound, message: "Email o código incorrecto" },
   ];
 };

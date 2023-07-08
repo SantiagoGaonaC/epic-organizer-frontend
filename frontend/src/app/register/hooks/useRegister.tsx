@@ -11,12 +11,12 @@ const useRegister = () => {
   const [step, setStep] = useState(1);
 
   const callApiCode = async (values: RegistrationValues) => {
-    const { firstname, lastname, email } = values;
+    const { nombre, apellido, email } = values;
     setLoading(true);
     try {
       const response = await registerService.register(
-        firstname,
-        lastname,
+        nombre,
+        apellido,
         email
       );
       console.log(response);

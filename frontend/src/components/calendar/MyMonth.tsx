@@ -1,7 +1,5 @@
 import { useState, useContext } from "react";
-import MyDay from "@/components/global/UI/calendar/MyDay";
-import Week from "@/components/global/UI/calendar/MyWeek";
-import MyColumnHead from "@/components/global/UI/calendar/MyColumnHead";
+import { MyDay, MyWeek, MyColumnHead } from "@/components";
 import { IMonthProps } from "@/models/Month.props.model";
 import { TaskContext } from "@/context/TaskContext";
 
@@ -108,7 +106,7 @@ const MyMonth = ({ month, setTasks }: IMonthProps) => {
       {loading ? (
         <div>Loading...</div> // Display a loading state while tasks are being fetched
       ) : (
-        weeks.map((week, i) => <Week key={i} days={week} />)
+        weeks.map((week, i) => <MyWeek key={i} days={week} />)
       )}
     </div>
   );

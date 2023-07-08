@@ -1,13 +1,6 @@
 import axios from "axios";
 import { env } from "@/env";
-
-export interface IRegisterService {
-  register: (
-    firstname: string,
-    lastname: string,
-    email: string
-  ) => Promise<any>;
-}
+import { IRegisterService } from "../models";
 
 export class RegisterServiceAxios implements IRegisterService {
   async register(

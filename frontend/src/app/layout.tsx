@@ -2,7 +2,6 @@
 import { AuthProvider } from "@/context/AuthProvier";
 import "./globals.css";
 import theme from "@/theme/theme";
-
 import { CacheProvider } from "@chakra-ui/next-js";
 import { ChakraProvider } from "@chakra-ui/react";
 import { TaskProvider } from "@/context/TaskContext";
