@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   FormControl,
   ModalBody,
@@ -15,15 +15,25 @@ import {
   Tag,
   TagLabel,
   TagCloseButton,
+  Button,
+  IconButton,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { ITask } from "@/models";
-import { TaskServiceAxios, TaskUpdateServices } from "@/services";
+import {
+  TaskDeleteServices,
+  TaskServiceAxios,
+  TaskUpdateServices,
+} from "@/services";
+import { TaskContext } from "@/context/TaskContext";
+import { DeleteIcon } from "@chakra-ui/icons";
+import { SingleDatepicker } from "chakra-dayzed-datepicker";
+import { getColorModeDate } from "@/utilities/Date.color.utilities";
 
 export const useMyModalTask = (
   initialSelectedDate: Date | undefined,
-  setTasks: React.Dispatch<React.SetStateAction<ITask[]>>,
   fetchTasks: () => Promise<ITask[]>,
   updateTaskInState: (updatedTask: ITask) => void
 ) => {
@@ -37,8 +47,8 @@ export const useMyModalTask = (
   const [title, setTitle] = useState("");
   const [toggle, setToggle] = useState(false);
   const [desc, setDesc] = useState("");
-  const taskService = new TaskServiceAxios();
-  const updateTaskService = new TaskUpdateServices();
+  const { updateTask, createTask } = useContext(TaskContext)!;
+  const [date, setDate] = useState(new Date());
 
   useEffect(() => {
     if (selectedTask) {
@@ -51,12 +61,12 @@ export const useMyModalTask = (
 
   const onTaskOpen = (task: ITask) => {
     setSelectedTask(task);
-    onDisclosureOpen(); // Use the renamed function here
+    onDisclosureOpen();
   };
 
   const onOpen = () => {
     setSelectedTask(null);
-    onDisclosureOpen(); // Use the renamed function here
+    onDisclosureOpen();
   };
 
   const handleFormSubmit = async () => {
@@ -64,7 +74,6 @@ export const useMyModalTask = (
       return;
     }
     if (selectedTask) {
-      // si se seleccionó una tarea, la actualizamos
       const updatedTask = {
         ...selectedTask,
         task_title: title,
@@ -73,30 +82,45 @@ export const useMyModalTask = (
         date: selectedDate.toISOString(),
         toggle: toggle,
       };
-      await updateTaskService.updateTask(selectedTask._id, updatedTask);
-      if (updateTaskInState) {
-        updateTaskInState(updatedTask); // Call the new function here
-      }
-    } else {
-      // de lo contrario, creamos una nueva tarea
-      const newTask = await taskService.createTask(
-        title,
-        "Personal",
-        desc,
-        selectedDate.toISOString(),
-        toggle
-      );
-      setTasks((prevTasks) => [...prevTasks, newTask]);
+      await updateTask(selectedTask._id, updatedTask).then(() => {
+        fetchTasks();
+        if (updateTaskInState) {
+          updateTaskInState(updatedTask); // Call the new function here
+        }
+      });
+    } else if (title.trim() !== "") {
+      // Validar que el título no esté vacío
+      const newTask = {
+        _id: "",
+        user: "",
+        __v: 0,
+        task_title: title,
+        category: "Personal",
+        description: desc,
+        date: selectedDate.toISOString(),
+        toggle: toggle,
+      };
+      await createTask(newTask);
     }
 
     setTitle("");
-    setToggle(false);
-    onClose();
+    setToggle(toggle);
     fetchTasks();
+    onClose();
   };
 
   const onSubmit = () => {
-    handleFormSubmit(); // call handleFormSubmit when form is submitted
+    handleFormSubmit();
+  };
+
+  const taskDelete = new TaskDeleteServices();
+
+  const onDelete = async () => {
+    if (selectedTask) {
+      await taskDelete.deleteTask(selectedTask._id);
+      fetchTasks();
+      onClose();
+    }
   };
 
   const handleTitleSubmit = (nextValue: string) => {
@@ -114,7 +138,10 @@ export const useMyModalTask = (
         size={"xl"}
       >
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent
+          bg={useColorModeValue("gray.900", "gray.100")}
+          color={useColorModeValue("white", "black")}
+        >
           <ModalHeader>
             <Editable
               submitOnBlur={true}
@@ -139,11 +166,14 @@ export const useMyModalTask = (
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
-            <DatePicker
-              dateFormat="MM/dd/yyyy"
-              selected={selectedDate}
-              onChange={(date: Date) => setSelectedDate(date)}
-            />
+            {selectedDate !== null && (
+              <SingleDatepicker
+                name="date-input"
+                date={selectedDate}
+                onDateChange={(date: Date) => setSelectedDate(date)}
+                propsConfigs={getColorModeDate()}
+              />
+            )}
             <Checkbox
               isChecked={toggle}
               isDisabled={false}
@@ -153,7 +183,7 @@ export const useMyModalTask = (
             </Checkbox>
             <FormControl mt={4}>
               <Editable
-                defaultValue="D e t a l l e s . . ."
+                defaultValue={selectedTask?.description || "Detalles"}
                 onChange={(e) => setDesc(e)}
               >
                 <EditablePreview />
@@ -162,6 +192,16 @@ export const useMyModalTask = (
                 />
               </Editable>
             </FormControl>
+            <IconButton
+              border={"none"}
+              variant="outline"
+              aria-label="Borrar"
+              fontSize="15px"
+              icon={<DeleteIcon />}
+              color={useColorModeValue("black", "white")}
+              onClick={onDelete}
+              isDisabled={!selectedTask}
+            />
           </ModalBody>
         </ModalContent>
       </Modal>

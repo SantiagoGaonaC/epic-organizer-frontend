@@ -2,23 +2,24 @@ import { Flex, Checkbox, Box, Text } from "@chakra-ui/react";
 import { MyInsertTask } from "./entites/MyInsertTask";
 import { IMyDayProps } from "@/models/Day.props.model";
 import { TaskUpdateServices } from "@/services";
-import { ITask } from "@/models"
+import { ITask } from "@/models";
 import { useMyModalTask } from "./entites/useMyModalTask";
+import { useContext, useEffect } from "react";
+import { TaskContext } from "@/context/TaskContext";
 
 const MyDay = ({
   day,
   month,
   year,
   tasks,
-  setTasks,
   selectedDate,
   onSelectDate,
-  fetchTasks,
 }: IMyDayProps) => {
   const handleClick = () => {
     onSelectDate(day);
   };
   const isSelected = selectedDate?.getDate() === day;
+  const { fetchTasks, updateTask, setTasks } = useContext(TaskContext)!;
   const taskUpdateService = new TaskUpdateServices();
 
   const updateTaskInState = (updatedTask: ITask) => {
@@ -31,7 +32,6 @@ const MyDay = ({
 
   const { onTaskOpen, ModalComponent } = useMyModalTask(
     selectedDate || undefined,
-    setTasks,
     fetchTasks,
     updateTaskInState
   );
@@ -47,7 +47,7 @@ const MyDay = ({
   };
 
   const handleTaskClick = (task: ITask) => {
-    onTaskOpen(task); // Open the modal with the selected task
+    onTaskOpen(task);
   };
 
   return (
