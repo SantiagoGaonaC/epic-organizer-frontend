@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { MyMonth } from "@/components";
 import { ITask } from "@/models";
 import {
@@ -23,7 +23,6 @@ export const getNameOfMonth = (fecha: Date): string => {
 
 const MyCalendar = (props: ICalendarProps) => {
   const [monthViewed, setmonthViewed] = useState(new Date());
-  const [tasks, setTasks] = useState<ITask[]>([]);
 
   const cambiarMes = (increase: number) => {
     setmonthViewed((getCurrentMonth) => {
@@ -39,7 +38,7 @@ const MyCalendar = (props: ICalendarProps) => {
 
   return (
     <Box
-      bg={useColorModeValue("gray.800", "gray.100")}
+      bg={useColorModeValue("black", "gray.100")}
       px={4}
       color={useColorModeValue("white", "black")}
     >
@@ -91,7 +90,7 @@ const MyCalendar = (props: ICalendarProps) => {
             </ButtonGroup>
           </Stack>
         </Center>
-        <MyMonth month={monthViewed} setTasks={setTasks} />
+        <MyMonth month={monthViewed}/>
       </div>
     </Box>
   );

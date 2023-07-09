@@ -22,12 +22,7 @@ export const MyInsertTask = ({
     ModalComponent,
     selectedDate: modalSelectedDate,
     setSelectedDate: setModalSelectedDate,
-  } = useMyModalTask(
-    selectedDate || undefined,
-    setTasks,
-    fetchTasks,
-    updateTaskInState
-  );
+  } = useMyModalTask(selectedDate || undefined, fetchTasks, updateTaskInState);
 
   useEffect(() => {
     setModalSelectedDate(selectedDate === undefined ? null : selectedDate); // Update the selectedDate in the useMyModalTask hook

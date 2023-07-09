@@ -1,11 +1,12 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { MyDay, MyWeek, MyColumnHead } from "@/components";
 import { IMonthProps } from "@/models/Month.props.model";
 import { TaskContext } from "@/context/TaskContext";
 
-const MyMonth = ({ month, setTasks }: IMonthProps) => {
+const MyMonth = ({ month }: IMonthProps) => {
   const [selectedDate, setselectedDate] = useState<Date | null>(null);
-  const { tasks, loading, fetchTasks } = useContext(TaskContext)!;
+  const { tasks, loading, fetchTasks, updateTask, createTask, setTasks } =
+    useContext(TaskContext)!;
 
   const handleSelectDate = (dia: number) => {
     setselectedDate(new Date(month.getFullYear(), month.getMonth(), dia));
@@ -44,9 +45,9 @@ const MyMonth = ({ month, setTasks }: IMonthProps) => {
         key={`prev-${lastDayOfPreviousMonth - i}`}
         day={lastDayOfPreviousMonth - i}
         tasks={[]}
-        setTasks={setTasks}
         onSelectDate={handleSelectDate}
-        fetchTasks={fetchTasks} // Pasa fetchTasks al componente MyDay
+        setTasks={setTasks}
+        fetchTasks={fetchTasks}
       />
     );
   }
@@ -74,10 +75,10 @@ const MyMonth = ({ month, setTasks }: IMonthProps) => {
         month={month.getMonth()}
         year={month.getFullYear()}
         tasks={dailyTasks}
-        setTasks={setTasks}
         selectedDate={selectedDate}
         onSelectDate={handleSelectDate}
-        fetchTasks={fetchTasks} // Pasa fetchTasks al componente MyDay
+        setTasks={setTasks}
+        fetchTasks={fetchTasks}
       />
     );
   }
@@ -88,9 +89,9 @@ const MyMonth = ({ month, setTasks }: IMonthProps) => {
         key={`next-${i}`}
         day={i}
         tasks={[]}
-        setTasks={setTasks}
         onSelectDate={handleSelectDate}
-        fetchTasks={fetchTasks} // Pasa fetchTasks al componente MyDay
+        setTasks={setTasks}
+        fetchTasks={fetchTasks}
       />
     );
   }
@@ -104,7 +105,7 @@ const MyMonth = ({ month, setTasks }: IMonthProps) => {
     <div>
       <MyColumnHead />
       {loading ? (
-        <div>Loading...</div> // Display a loading state while tasks are being fetched
+        <div>Loading...</div>
       ) : (
         weeks.map((week, i) => <MyWeek key={i} days={week} />)
       )}
