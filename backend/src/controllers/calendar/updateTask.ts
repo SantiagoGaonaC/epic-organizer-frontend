@@ -3,7 +3,7 @@ import TaskModel from "../../models/calendar";
 export const updateTask = async (req: any, res: Response) => {
   try {
     const { taskId } = req.params;
-    const { task_title, category, description, date } = req.body;
+    const { task_title, category, description, date, toggle } = req.body;
 
     const updatedTask = await TaskModel.findByIdAndUpdate(
       taskId,
@@ -12,6 +12,7 @@ export const updateTask = async (req: any, res: Response) => {
         category,
         description,
         date,
+        toggle,
       },
       { new: true }
     );

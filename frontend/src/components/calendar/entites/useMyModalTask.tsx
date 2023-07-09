@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   FormControl,
   ModalBody,
@@ -19,43 +19,80 @@ import {
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { ITask } from "@/models";
-import { TaskServiceAxios } from "@/services/createTask.services";
+import { TaskServiceAxios, TaskUpdateServices } from "@/services";
 
 export const useMyModalTask = (
   initialSelectedDate: Date | undefined,
   setTasks: React.Dispatch<React.SetStateAction<ITask[]>>,
-  fetchTasks: () => Promise<ITask[]>
+  fetchTasks: () => Promise<ITask[]>,
+  updateTaskInState: (updatedTask: ITask) => void
 ) => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen, onOpen: onDisclosureOpen, onClose } = useDisclosure();
   const initialRef = React.useRef(null);
   const finalRef = React.useRef(null);
   const [selectedDate, setSelectedDate] = useState<Date | null>(
     initialSelectedDate || null
   );
+  const [selectedTask, setSelectedTask] = useState<ITask | null>(null);
   const [title, setTitle] = useState("");
   const [toggle, setToggle] = useState(false);
+  const [desc, setDesc] = useState("");
   const taskService = new TaskServiceAxios();
+  const updateTaskService = new TaskUpdateServices();
+
+  useEffect(() => {
+    if (selectedTask) {
+      setTitle(selectedTask.task_title);
+      setDesc(selectedTask.description);
+      setSelectedDate(new Date(selectedTask.date));
+      setToggle(selectedTask.toggle);
+    }
+  }, [selectedTask]);
+
+  const onTaskOpen = (task: ITask) => {
+    setSelectedTask(task);
+    onDisclosureOpen(); // Use the renamed function here
+  };
+
+  const onOpen = () => {
+    setSelectedTask(null);
+    onDisclosureOpen(); // Use the renamed function here
+  };
 
   const handleFormSubmit = async () => {
     if (!selectedDate) {
       return;
     }
-
-    const newTask = await taskService.createTask(
-      title,
-      "Personal",
-      "Ir al body",
-      selectedDate.toISOString(),
-      toggle
-    );
+    if (selectedTask) {
+      // si se seleccionó una tarea, la actualizamos
+      const updatedTask = {
+        ...selectedTask,
+        task_title: title,
+        category: "Personal",
+        description: desc,
+        date: selectedDate.toISOString(),
+        toggle: toggle,
+      };
+      await updateTaskService.updateTask(selectedTask._id, updatedTask);
+      if (updateTaskInState) {
+        updateTaskInState(updatedTask); // Call the new function here
+      }
+    } else {
+      // de lo contrario, creamos una nueva tarea
+      const newTask = await taskService.createTask(
+        title,
+        "Personal",
+        desc,
+        selectedDate.toISOString(),
+        toggle
+      );
+      setTasks((prevTasks) => [...prevTasks, newTask]);
+    }
 
     setTitle("");
     setToggle(false);
     onClose();
-
-    fetchTasks().then((updatedTasks) => {
-      setTasks((prevTasks) => [...prevTasks, newTask]);
-    });
+    fetchTasks();
   };
 
   const onSubmit = () => {
@@ -81,13 +118,14 @@ export const useMyModalTask = (
           <ModalHeader>
             <Editable
               submitOnBlur={true}
-              defaultValue="Título de la tarea"
+              value={title} // Actualiza este valor
               onSubmit={handleTitleSubmit} // Pass the submit handler function here
               onChange={(e) => setTitle(e)}
             >
               <EditablePreview />
               <EditableTextarea />
             </Editable>
+
             <Tag
               size={"lg"}
               key={"lg"}
@@ -107,13 +145,17 @@ export const useMyModalTask = (
               onChange={(date: Date) => setSelectedDate(date)}
             />
             <Checkbox
+              isChecked={toggle}
               isDisabled={false}
               onChange={(e) => setToggle(e.target.checked)}
             >
               Hecho
             </Checkbox>
             <FormControl mt={4}>
-              <Editable defaultValue="D e t a l l e s . . .">
+              <Editable
+                defaultValue="D e t a l l e s . . ."
+                onChange={(e) => setDesc(e)}
+              >
                 <EditablePreview />
                 <EditableTextarea
                   style={{ height: "200px", overflow: "auto" }}
@@ -126,5 +168,5 @@ export const useMyModalTask = (
     </>
   );
 
-  return { onOpen, ModalComponent, selectedDate, setSelectedDate };
+  return { onOpen, onTaskOpen, ModalComponent, selectedDate, setSelectedDate };
 };

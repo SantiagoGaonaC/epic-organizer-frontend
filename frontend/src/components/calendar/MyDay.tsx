@@ -1,6 +1,9 @@
-import { Flex, Checkbox } from "@chakra-ui/react";
+import { Flex, Checkbox, Box, Text } from "@chakra-ui/react";
 import { MyInsertTask } from "./entites/MyInsertTask";
 import { IMyDayProps } from "@/models/Day.props.model";
+import { TaskUpdateServices } from "@/services";
+import { ITask } from "@/models"
+import { useMyModalTask } from "./entites/useMyModalTask";
 
 const MyDay = ({
   day,
@@ -15,8 +18,37 @@ const MyDay = ({
   const handleClick = () => {
     onSelectDate(day);
   };
-
   const isSelected = selectedDate?.getDate() === day;
+  const taskUpdateService = new TaskUpdateServices();
+
+  const updateTaskInState = (updatedTask: ITask) => {
+    setTasks((prevTasks) =>
+      prevTasks.map((task) =>
+        task._id === updatedTask._id ? updatedTask : task
+      )
+    );
+  };
+
+  const { onTaskOpen, ModalComponent } = useMyModalTask(
+    selectedDate || undefined,
+    setTasks,
+    fetchTasks,
+    updateTaskInState
+  );
+
+  const handleCheckboxChange = async (task: ITask) => {
+    task.toggle = !task.toggle;
+    try {
+      await taskUpdateService.updateTask(task._id, task);
+      fetchTasks();
+    } catch (error: unknown) {
+      console.log("Hubo un error al actualizar la tarea", error);
+    }
+  };
+
+  const handleTaskClick = (task: ITask) => {
+    onTaskOpen(task); // Open the modal with the selected task
+  };
 
   return (
     <Flex
@@ -43,15 +75,34 @@ const MyDay = ({
       </span>
       <div className="mt-7">
         {tasks.map((task) => (
-          <div
+          <Box
             key={task._id}
             className="m-1 list-outside border p-1 text-left text-xs "
+            onClick={() => handleTaskClick(task)}
           >
-            <Checkbox id={task._id} defaultChecked={task.toggle}>
-              {task.task_title}
-            </Checkbox>
-            <div className="p-1">{task.category}</div>
-          </div>
+            <Flex>
+              <Flex
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
+              >
+                <Checkbox
+                  id={task._id}
+                  defaultChecked={task.toggle}
+                  onChange={(e) => {
+                    e.stopPropagation();
+                    handleCheckboxChange(task);
+                  }}
+                />
+              </Flex>
+              <Box>
+                <Text fontSize="md" ml={1}>
+                  {task.task_title}
+                </Text>
+                <Text className="p-1">{task.category}</Text>
+              </Box>
+            </Flex>
+          </Box>
         ))}
       </div>
       <MyInsertTask
@@ -59,6 +110,7 @@ const MyDay = ({
         setTasks={setTasks}
         fetchTasks={fetchTasks}
       />
+      {ModalComponent}
     </Flex>
   );
 };
