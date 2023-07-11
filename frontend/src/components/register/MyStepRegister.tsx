@@ -7,6 +7,7 @@ import {
   Link,
   SimpleGrid,
   Text,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import MyInput from "../entities/input/MyInput";
 import MyForm from "../entities/forms/MyForm";
@@ -15,6 +16,7 @@ import {
   registrationSchema,
 } from "@/models/RegisterSchema";
 import { useRouter } from "next/navigation";
+import MyButtonAuth from "../entities/buttons/MyButtonAuth";
 
 interface Props {
   onSubmit: (values: RegistrationValues) => Promise<void>;
@@ -44,16 +46,7 @@ const MyStepRegister = ({ onSubmit, onError, userExist }: Props) => {
           <Box position="relative">
             <SimpleGrid gap={2} p={1} columns={3}>
               <Box />
-              <Button
-                type="submit"
-                rounded={"full"}
-                _hover={{
-                  bg: "gray.700",
-                }}
-                color="white"
-              >
-                Registrarse
-              </Button>
+              <MyButtonAuth text="Registrarse" />
             </SimpleGrid>
           </Box>
         </ButtonGroup>

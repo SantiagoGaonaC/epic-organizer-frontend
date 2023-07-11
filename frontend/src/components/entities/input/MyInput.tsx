@@ -3,6 +3,7 @@ import {
   FormErrorMessage,
   FormLabel,
   Input,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { ReactNode } from "react";
 import { useFormContext } from "react-hook-form";
@@ -32,13 +33,14 @@ const MyInput = ({
   } = useFormContext();
   return (
     <FormControl id={fieldname} isInvalid={!!errors[fieldname]}>
-      <FormLabel>{label}</FormLabel>
+      <FormLabel color={useColorModeValue("white", "black")}>{label}</FormLabel>
       <Input
         type={type || "text"}
         placeholder={placeholder || label}
         {...register(fieldname)}
         className={className}
         onChange={onChange}
+        borderColor={useColorModeValue("", "black")}
       />
       {children}
       <FormErrorMessage>

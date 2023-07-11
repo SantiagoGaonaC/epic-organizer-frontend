@@ -7,6 +7,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import React from "react";
+import MyColorMode from "../MyColorMode";
 
 interface Props {
   heading: string;
@@ -19,28 +20,34 @@ function MyAuthPanel({ heading, desc, children }: Props) {
       minH={"100vh"}
       align={"center"}
       justify={"center"}
-      bg={useColorModeValue("gray.900", "gray.200")}
+      bg={useColorModeValue("black", "gray.200")}
     >
-      <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
+      <Stack
+        spacing={8}
+        mx={"auto"}
+        maxW={"lg"}
+        py={12}
+        px={6}
+        boxShadow={useColorModeValue(
+          "0 0 10px rgba(255, 255, 255, 0.2)",
+          "0 0 10px rgba(0, 0, 0, 0.2)"
+        )}
+      >
         <Stack align={"center"}>
-          <Heading fontSize={"4xl"} color={useColorModeValue("white", "white")}>
+          <Heading fontSize={"4xl"} color={useColorModeValue("white", "black")}>
             {heading}
           </Heading>
           <Text fontSize={"lg"} color={"gray.600"}>
             {desc}
           </Text>
         </Stack>
-        <Box
-          rounded={"lg"}
-          bg={useColorModeValue("gray.800", "gray.200")}
-          boxShadow={"lg"}
-          p={8}
-        >
+        <Box rounded={"lg"} bg={useColorModeValue("black", "gray.200")} p={8}>
           <Stack spacing={4} color={useColorModeValue("white", "white")}>
             {children}
           </Stack>
         </Box>
       </Stack>
+      <MyColorMode />
     </Flex>
   );
 }

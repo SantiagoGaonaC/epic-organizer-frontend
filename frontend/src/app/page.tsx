@@ -1,5 +1,7 @@
 "use client";
 
+import MyColorMode from "@/components/entities/MyColorMode";
+import MyButtonAuth from "@/components/entities/buttons/MyButtonAuth";
 import {
   Button,
   Flex,
@@ -21,8 +23,9 @@ export default function SplitScreen() {
         flex={1}
         align={"center"}
         justify={"center"}
-        bg={useColorModeValue("gray.900", "gray.200")}
+        bg={useColorModeValue("black", "gray.200")}
       >
+        <MyColorMode margin={3} />
         <Stack spacing={6} w={"full"} maxW={"lg"}>
           <Heading fontSize={{ base: "3xl", md: "4xl", lg: "5xl" }}>
             <Text
@@ -38,7 +41,7 @@ export default function SplitScreen() {
                 bg: "red.400",
                 zIndex: -1,
               }}
-              color={"white"}
+              color={useColorModeValue("white", "black")}
             >
               Epic Organizer
             </Text>
@@ -47,34 +50,25 @@ export default function SplitScreen() {
               Gestiona tus tareas
             </Text>{" "}
           </Heading>
-          <Text fontSize={{ base: "md", lg: "lg" }} color={"gray.500"}>
+          <Text
+            fontSize={{ base: "md", lg: "lg" }}
+            color={useColorModeValue("gray.500", "black")}
+            textAlign="justify"
+          >
             Gestiona tareas de forma interactiva y minimalista con nuestra web.
             Organiza tu día en el calendario, establece recordatorios y mantén
             un flujo de trabajo eficiente. Simplifica tu vida y maximiza tu
             productividad.
           </Text>
           <Stack direction={{ base: "column", md: "row" }} spacing={4}>
-            <Button
-              rounded={"full"}
-              bg={"gray.800"}
-              color={"white"}
-              _hover={{
-                bg: "gray.800",
-              }}
-              onClick={() => router.push("/login")}
-            >
-              Iniciar Sesión
-            </Button>
-            <Button
-              color={"white"}
-              rounded={"full"}
-              _hover={{
-                bg: "gray.800",
-              }}
-              onClick={() => router.push("/register")}
-            >
-              Registrarse
-            </Button>
+            <MyButtonAuth
+              text="Iniciar Sesión"
+              onClickHandler={() => router.push("/login")}
+            />
+            <MyButtonAuth
+              text="Registrarse"
+              onClickHandler={() => router.push("/register")}
+            />
           </Stack>
         </Stack>
       </Flex>

@@ -9,6 +9,7 @@ import {
   ButtonGroup,
   Center,
 } from "@chakra-ui/react";
+import MyButtonAuth from "../entities/buttons/MyButtonAuth";
 
 interface ICalendarProps {
   // props if any
@@ -51,46 +52,22 @@ const MyCalendar = (props: ICalendarProps) => {
         <Center>
           <Stack margin={3}>
             <ButtonGroup variant="outline" spacing="6">
-              <Button
-                colorScheme="gray"
-                variant="outline"
-                color="white"
-                onClick={() => cambiarMes(-1)}
-                rounded={"full"}
-                _hover={{
-                  bg: "gray.700",
-                }}
-              >
-                Mes anterior
-              </Button>
-              <Button
-                colorScheme="gray"
-                variant="outline"
-                color="white"
-                onClick={goToCurrentMonth}
-                rounded={"full"}
-                _hover={{
-                  bg: "gray.700",
-                }}
-              >
-                Ir al mes actual
-              </Button>
-              <Button
-                colorScheme="gray"
-                variant="outline"
-                color="white"
-                onClick={() => cambiarMes(1)}
-                rounded={"full"}
-                _hover={{
-                  bg: "gray.700",
-                }}
-              >
-                Mes siguiente
-              </Button>
+              <MyButtonAuth
+                text="Mes anterior"
+                onClickHandler={() => cambiarMes(-1)}
+              />
+              <MyButtonAuth
+                text="Ir al mes actual"
+                onClickHandler={goToCurrentMonth}
+              />
+              <MyButtonAuth
+                text="Mes siguiente"
+                onClickHandler={() => cambiarMes(1)}
+              />
             </ButtonGroup>
           </Stack>
         </Center>
-        <MyMonth month={monthViewed}/>
+        <MyMonth month={monthViewed} />
       </div>
     </Box>
   );
