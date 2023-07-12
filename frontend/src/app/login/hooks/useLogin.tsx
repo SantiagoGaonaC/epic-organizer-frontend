@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useToast } from "@chakra-ui/react";
 import { LoginValues } from "@/models/AuthSchema";
 import useAuth from "@/hooks/useAuth";
 import { loginAxios } from "../services";
@@ -11,7 +10,6 @@ const useLogin = () => {
   const [emailCodeIncorrect, setEmailCodeIncorrect] = useState(false);
   const [emailNotFound, setEmailNotFound] = useState(false);
   const [errLogin, setErrLogin] = useState(false);
-  const toast = useToast();
   const router = useRouter();
   const { setUser } = useAuth();
 

@@ -1,6 +1,5 @@
 "use client";
 import { AppHeader } from "@/components";
-import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 import {
   Avatar,
   Box,
@@ -12,7 +11,6 @@ import {
   Menu,
   MenuButton,
   MenuDivider,
-  MenuItem,
   MenuList,
   Stack,
   useColorModeValue,

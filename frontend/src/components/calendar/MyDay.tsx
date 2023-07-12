@@ -4,7 +4,7 @@ import { IMyDayProps } from "@/models/Day.props.model";
 import { TaskUpdateServices } from "@/services";
 import { ITask } from "@/models";
 import { useMyModalTask } from "./entites/useMyModalTask";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { TaskContext } from "@/context/TaskContext";
 
 const MyDay = ({

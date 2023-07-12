@@ -1,12 +1,7 @@
 "use client";
 
 import {
-  Flex,
   Box,
-  Stack,
-  Button,
-  Heading,
-  Text,
   useColorModeValue,
   ButtonGroup,
   Center,
@@ -15,7 +10,6 @@ import {
 } from "@chakra-ui/react";
 import { NextPage } from "next";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { LoginSchema } from "@/models/AuthSchema";
 import { MyAuthPanel, MyErrorMessage, MyForm, MyInput } from "@/components";
 import { getErrorMessages } from "@/utilities/error.msg.utilities";

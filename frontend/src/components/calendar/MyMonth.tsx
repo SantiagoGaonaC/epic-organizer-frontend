@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext } from "react";
 import { MyDay, MyWeek, MyColumnHead } from "@/components";
 import { IMonthProps } from "@/models/Month.props.model";
 import { TaskContext } from "@/context/TaskContext";

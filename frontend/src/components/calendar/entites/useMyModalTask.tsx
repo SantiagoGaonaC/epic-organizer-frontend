@@ -15,18 +15,13 @@ import {
   Tag,
   TagLabel,
   TagCloseButton,
-  Button,
   IconButton,
   useColorModeValue,
 } from "@chakra-ui/react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { ITask } from "@/models";
-import {
-  TaskDeleteServices,
-  TaskServiceAxios,
-  TaskUpdateServices,
-} from "@/services";
+import { TaskDeleteServices } from "@/services";
 import { TaskContext } from "@/context/TaskContext";
 import { DeleteIcon } from "@chakra-ui/icons";
 import { SingleDatepicker } from "chakra-dayzed-datepicker";
@@ -145,8 +140,8 @@ export const useMyModalTask = (
           <ModalHeader>
             <Editable
               submitOnBlur={true}
-              value={title} // Actualiza este valor
-              onSubmit={handleTitleSubmit} // Pass the submit handler function here
+              value={title}
+              onSubmit={handleTitleSubmit}
               onChange={(e) => setTitle(e)}
             >
               <EditablePreview />

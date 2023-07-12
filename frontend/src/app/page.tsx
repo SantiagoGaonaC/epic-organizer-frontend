@@ -3,7 +3,6 @@
 import MyColorMode from "@/components/entities/MyColorMode";
 import MyButtonAuth from "@/components/entities/buttons/MyButtonAuth";
 import {
-  Button,
   Flex,
   Heading,
   Image,

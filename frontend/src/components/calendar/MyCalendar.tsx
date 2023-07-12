@@ -1,11 +1,9 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { MyMonth } from "@/components";
-import { ITask } from "@/models";
 import {
   Box,
   useColorModeValue,
   Stack,
-  Button,
   ButtonGroup,
   Center,
 } from "@chakra-ui/react";
