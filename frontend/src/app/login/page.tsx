@@ -1,12 +1,7 @@
 "use client";
 
 import {
-  Flex,
   Box,
-  Stack,
-  Button,
-  Heading,
-  Text,
   useColorModeValue,
   ButtonGroup,
   Center,
@@ -15,13 +10,13 @@ import {
 } from "@chakra-ui/react";
 import { NextPage } from "next";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { LoginSchema } from "@/models/AuthSchema";
 import { MyAuthPanel, MyErrorMessage, MyForm, MyInput } from "@/components";
 import { getErrorMessages } from "@/utilities/error.msg.utilities";
 import { useLogin } from "./hooks";
 import { useCodeRequest } from "./hooks";
 import { AuthServiceAxios } from "./services";
+import MyButtonAuth from "@/components/entities/buttons/MyButtonAuth";
 
 const Login: NextPage = () => {
   const white = useColorModeValue("white", "white");
@@ -60,28 +55,11 @@ const Login: NextPage = () => {
         <ButtonGroup marginTop={3} justifyContent="center">
           <Box position="relative">
             <SimpleGrid gap={2} p={1} columns={2}>
-              <Button
-                type="submit"
-                color={white}
-                rounded={"full"}
-                _hover={{
-                  bg: "gray.700",
-                }}
-                onClick={() => {}}
-              >
-                Iniciar sesión
-              </Button>{" "}
-              <Button
-                color={white}
-                rounded={"full"}
-                _hover={{
-                  bg: "gray.700",
-                }}
-                type="submit"
-                onClick={handleCodeRequest}
-              >
-                Quiero un código
-              </Button>
+              <MyButtonAuth onClickHandler={() => {}} text="Iniciar sesión" />{" "}
+              <MyButtonAuth
+                onClickHandler={handleCodeRequest}
+                text="Quiero un código"
+              />
             </SimpleGrid>
           </Box>
         </ButtonGroup>

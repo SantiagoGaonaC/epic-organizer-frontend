@@ -1,5 +1,5 @@
 "use client";
-import { MyCalendar, MyNavbar, AppHeader } from "@/components/";
+import { MyCalendar, MyNavbar } from "@/components/";
 
 export default function Calendar() {
   return (

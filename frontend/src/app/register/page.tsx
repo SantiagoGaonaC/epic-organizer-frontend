@@ -1,6 +1,6 @@
 "use client";
 
-import { Spinner, Center, Stack, Flex } from "@chakra-ui/react";
+import { Spinner, Center } from "@chakra-ui/react";
 import { NextPage } from "next";
 import { MyStepRegister, MyStepRegCode, MyAuthPanel } from "@/components";
 import useRegister from "./hooks/useRegister";

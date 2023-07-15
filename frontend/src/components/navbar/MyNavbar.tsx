@@ -1,6 +1,5 @@
 "use client";
 import { AppHeader } from "@/components";
-import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 import {
   Avatar,
   Box,
@@ -12,16 +11,14 @@ import {
   Menu,
   MenuButton,
   MenuDivider,
-  MenuItem,
   MenuList,
   Stack,
-  useColorMode,
   useColorModeValue,
-  useDisclosure,
 } from "@chakra-ui/react";
 import { ReactNode } from "react";
 import MyUsername from "./MyUser";
-const Links = ["Dashboard", "Projects", "Team"];
+import MyColorMode from "../entities/MyColorMode";
+const Links = ["Coming soon", "Coming soon..."];
 
 const NavLink = ({ children }: { children: ReactNode }) => (
   <Link
@@ -38,8 +35,6 @@ const NavLink = ({ children }: { children: ReactNode }) => (
   </Link>
 );
 export default function MyNavbar() {
-  const { colorMode, toggleColorMode } = useColorMode();
-  const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <>
       <Box bg={useColorModeValue("gray.900", "gray.100")} px={4}>
@@ -55,13 +50,9 @@ export default function MyNavbar() {
               <NavLink key={link}>{link}</NavLink>
             ))}
           </HStack>
-
           <Flex alignItems={"center"}>
             <Stack direction={"row"} spacing={7}>
-              <Button onClick={toggleColorMode} color="white">
-                {colorMode === "light" ? <MoonIcon /> : <SunIcon />}
-              </Button>
-
+              <MyColorMode />
               <Menu>
                 <MenuButton
                   as={Button}
