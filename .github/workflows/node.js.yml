@@ -19,8 +19,9 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-        cache-dependency-path: epicorganizer-frontend/epic-organizer/epic-organizer/frontend/package-lock.json
+        working-directory: frontend
     - name: Change to frontend directory
-      run: cd epicorganizer-frontend/epic-organizer/epic-organizer/frontend
     - run: npm i
+      working-directory: frontend
     - run: npm run build --if-present
+      working-directory: frontend
