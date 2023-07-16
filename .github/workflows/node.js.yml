@@ -2,25 +2,27 @@ name: Node.js CI
 
 on:
   push:
-    branches: ["main"]
+    branches: [ "main" ]
 
 jobs:
-  frontend-deploy:
+  build:
+
     runs-on: self-hosted
 
     strategy:
       matrix:
         node-version: [16.x]
+
     steps:
-      - uses: actions/checkout@v3
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: "npm"
-      - run: npm i
-      - name: Create .env.local file
-        run: |
+    - uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    - run: npm i
+    - name: Create .env.local file
+      run: |
           echo NEXT_PUBLIC_BACKEND_BASE_URL=${{ secrets.SECRET_API_KEY }} >> .env.local
           echo PUBLIC_BACKEND_BASE_URL=${{ secrets.SECRET_API_KEY }} >> .env.local
-      - run: npm run build --if-present
+    - run: npm run build --if-present
