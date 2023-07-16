@@ -96,5 +96,7 @@ If you don't want to use turbo pack for your dev builds, delete --turbo in scrip
     <img src="https://img.shields.io/badge/Microsoft_Outlook-0078D4?style=for-the-badge&logo=microsoft-outlook&logoColor=white"/>
   </a>
 </p>
+
 # Video
+
 ![ExampleEpicOrganizer](https://github.com/SantiagoGaonaC/epic-organizer/assets/53282017/661c58af-3daa-4c5b-864d-c838e201b682)
