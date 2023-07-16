@@ -1,4 +1,20 @@
-# Epic Organizer
+<p align="center">
+ <img width="100px" src="https://github.com/SantiagoGaonaC/epic-organizer/blob/main/frontend/src/app/favicon.ico" align="center" alt="EpicOrganizer" />
+ <h2 align="center">Epic Organizer</h2>
+ <p align="center">Minimalist calendar to organize tasks
+</p>
+</p>
+
+## Table of Contents
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Features](#features)
+- [Contributing](#contributing)
+- [License](#license)
+- [Contact](#contact)
+
+## Requirements
+Some project requirements
 <div style="display: flex; justify-content: center;">
 <img src="https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white"/>
 <img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white"/>
@@ -9,114 +25,76 @@
 <img src="https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white"/>
 <img src="https://img.shields.io/badge/json%20web%20tokens-323330?style=for-the-badge&logo=json-web-tokens&logoColor=pink"/>
 <div/>
+<p align="center">
+   <a href="/backend/package.json">Backend package.json</a>
+  |
+   <a href="/frontend/package.json">Frontend package.json</a>
+</p>
   
-Epic Organizer es una aplicación de gestión de tareas y calendario. Los usuarios pueden crear tareas con etiquetas y fechas, que se muestran en un calendario interactivo. Las tareas pueden filtrarse por etiquetas, y se pueden agregar notas a cada tarea. 
+## Installation
+Clone repository
+```bash
+git clone https://github.com/SantiagoGaonaC/epic-organizer
+```
 
-## Características
+## Create `.env` required for backend and frontend
+- Backend .env file
+```json
+PORT=YOUR_PORT
+MONGODB_URL="YOUR_CONNECTION_CLUSTER"
+EMAIL="YOUR_EMAIL"
+EMAIL_PASSWORD="YOUR_PASSWORD"
+JWT_SECRET="YOUR_JWT_SECRET"
+```
+- Frontend .env.local file
+**using localhost and port 4000 for example api**
+```json
+NEXT_PUBLIC_BACKEND_BASE_URL="http://localhost:4000/api"
+PUBLIC_BACKEND_BASE_URL="http://localhost:4000/api"
+```
 
-### 1. Autenticación de Usuarios
-
-Los usuarios deben poder registrarse y autenticarse en la aplicación.
-
-**Actividades**
-
-- Configurar un servidor Express en Node.js para manejar las peticiones de autenticación.
-- Configurar una base de datos MongoDB para almacenar la información del usuario.
-- Implementar el envío de código de autenticación al correo electrónico del usuario.
-- Validar el código de autenticación del usuario.
-
-### 2. Manejo de Tareas
-
-Los usuarios deben poder crear, editar y eliminar tareas.
-
-**Actividades**
-
-- Configurar una colección en MongoDB para almacenar las tareas.
-- Crear rutas en Express para manejar la creación, actualización y eliminación de tareas.
-- Crear formularios en React usando React Hook Form para la entrada de datos de la tarea.
-
-### 3. Etiquetas de Tareas
-
-Las tareas deben tener etiquetas que pueden ser usadas para filtrar las tareas en el calendario.
-
-**Actividades**
-
-- Agregar un campo de etiquetas en la colección de tareas de MongoDB.
-- Crear una interfaz en React para seleccionar y agregar etiquetas a las tareas.
-
-### 4. Notas de Tareas
-
-Los usuarios deben poder agregar notas a las tareas.
-
-**Actividades**
-
-- Configurar una colección en MongoDB para almacenar las notas de las tareas.
-- Crear rutas en Express para manejar la creación y eliminación de notas.
-- Crear una interfaz en React para mostrar y editar las notas de las tareas.
-
-### 5. Calendario
-
-Los usuarios deben poder ver sus tareas en un calendario y navegar entre los meses.
-
-**Actividades**
-
-- Implementar una vista de calendario en React usando una biblioteca como `react-calendar`.
-- Agregar funcionalidad para mostrar las tareas en el calendario.
-- Implementar la navegación entre los meses en el calendario.
-
-### 6. Filtrado de Tareas
-
-Los usuarios deben poder filtrar sus tareas en el calendario por etiquetas.
-
-**Actividades**
-
-- Implementar una interfaz en React para seleccionar etiquetas de filtrado.
-- Agregar funcionalidad para filtrar las tareas en el calendario según las etiquetas seleccionadas.
-
+## Run
+For dev(test) using [`Turbopack`](https://turbo.build/pack) 
+```bash
+npm run dev
+```
+If you don't want to use turbo pack for your dev builds, delete --turbo in scripts dev in: <a href="/frontend/package.json">Frontend package.json</a>
+```json
+"scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+```
 ---
 
-# Por qué con NextJS?:
+# Features
+![image](https://github.com/SantiagoGaonaC/epic-organizer/assets/53282017/634c4ca1-c296-4530-b8eb-214ec0e5e65b)
 
-- Compilación de NextJS (Compiling): [What is Compiling? - How Next.js Works | Learn Next.js](https://nextjs.org/learn/foundations/how-nextjs-works/compiling)
+## Auth (Login - Register)
+- Register
+![image](https://github.com/SantiagoGaonaC/epic-organizer/assets/53282017/5d12d008-6123-40a7-a027-2ed62f828e85)
+- Login (Feature code send to email for auth)
+![image](https://github.com/SantiagoGaonaC/epic-organizer/assets/53282017/b72addcf-5fb0-4c79-8078-128510b9a82a)
 
-- Reducción de código (Minifying): [What is Minifying? - How Next.js Works | Learn Next.js](https://nextjs.org/learn/foundations/how-nextjs-works/minifying)
+## Calendar (Calendar - Task - Modals - Menulist)
+![image](https://github.com/SantiagoGaonaC/epic-organizer/assets/53282017/3981cdf2-4bfb-413d-a17d-40baf0d2d331)
+![image](https://github.com/SantiagoGaonaC/epic-organizer/assets/53282017/a403361c-b551-4694-a738-981ba0bba1b6)
 
-- Únificación del Código (Bundling): [What is Bundling? - How Next.js Works | Learn Next.js](https://nextjs.org/learn/foundations/how-nextjs-works/bundling)
-
-- División de código dependiendo de las rutas de entrada(## Code Splitting): [What is Code Splitting? - How Next.js Works | Learn Next.js](https://nextjs.org/learn/foundations/how-nextjs-works/code-splitting)
-
-- Pasos para llevar el code a producción (Build Time): [Build Time and Runtime - How Next.js Works | Learn Next.js](https://nextjs.org/learn/foundations/how-nextjs-works/buildtime-and-runtime)
-  
-  - - HTML files for statically generated pages
-    - JavaScript code for [rendering](https://nextjs.org/learn/foundations/how-nextjs-works/rendering) pages on the [server](https://nextjs.org/learn/foundations/how-nextjs-works/client-and-server)
-    - JavaScript code for making pages interactive on the [client](https://nextjs.org/learn/foundations/how-nextjs-works/client-and-server)
-    - CSS files
-
-- Runtime:
-  
-  - Rendering: [What is Rendering? - How Next.js Works | Learn Next.js](https://nextjs.org/learn/foundations/how-nextjs-works/rendering)
-  
-  - Client-Side Rendering vs. Pre-Rendering: Client Side carga componente por componente y cada componente puede tener un tamaño de carga diferente al otro, por lo cual la página puede cargar por partes, Pre Rendering toda la página se carga apenas se hace la solicitud.
-  
-  - Server-Side Rendering: Esto se renderiza del lado del servidor.
-  
-  - Static Site Generation: [What is Rendering? - How Next.js Works | Learn Next.js](https://nextjs.org/learn/foundations/how-nextjs-works/rendering) : Generación de sitios estáticos
-    Con la generación de sitios estáticos, el HTML se genera en el servidor, pero a diferencia de la renderización del lado del servidor, no hay servidor en tiempo de ejecución. En su lugar, el contenido se genera una vez, en tiempo de compilación, cuando se despliega la aplicación, y el HTML se almacena en una CDN y se reutiliza para cada solicitud.
-  
-  - Despliegue en múltiples CDN gracias a los archivos estáticos generados en Compilación de lado del servidor: [What is the Network? - How Next.js Works | Learn Next.js](https://nextjs.org/learn/foundations/how-nextjs-works/cdns-and-edge)
-
-- Enrutamiento dinámico por medio de la estructura de carpetas, contiene rutas por grupos en carptas
-
-- Importaciones de estilos automáticos desde NextJS sin necesidad de descargar los paquetes.
-
-- Aplicaciones extensibles.
-
-
-
----
-
-# Mockup
-
-
-
-![](C:\Users\sgaon\AppData\Roaming\marktext\images\2023-06-10-20-11-52-image.png)
+## Contributing
+## License
+## Contact
+<p align="center">
+  <a href="https://www.linkedin.com/in/santiago-gaona-carvajal/">
+    <img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white"/>
+  </a>
+   <a href="mailto:santigaona17@gmail.com" target="_blank">
+    <img src="https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white"/>
+  </a>
+  <a href="mailto:sgaonacarvajal@outlook.com" target="_blank">
+    <img src="https://img.shields.io/badge/Microsoft_Outlook-0078D4?style=for-the-badge&logo=microsoft-outlook&logoColor=white"/>
+  </a>
+</p>
+# Video
+![ExampleEpicOrganizer](https://github.com/SantiagoGaonaC/epic-organizer/assets/53282017/661c58af-3daa-4c5b-864d-c838e201b682)
