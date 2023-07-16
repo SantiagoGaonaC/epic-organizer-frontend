@@ -52,7 +52,7 @@ const MyDay = ({
 
   return (
     <Flex
-      className={`aspect-content flex-grow border border-gray-200 ${
+      className={`aspect-content flex-grow border border-gray-800 ${
         isSelected ? "bg-gray-950" : ""
       }`}
       style={{

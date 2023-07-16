@@ -1,23 +1,15 @@
 "use client";
-import { AppHeader } from "@/components";
 import {
-  Avatar,
   Box,
-  Button,
-  Center,
   Flex,
   HStack,
   Link,
-  Menu,
-  MenuButton,
-  MenuDivider,
-  MenuList,
   Stack,
   useColorModeValue,
 } from "@chakra-ui/react";
 import { ReactNode } from "react";
-import MyUsername from "./MyUser";
 import MyColorMode from "../entities/MyColorMode";
+import MyMenu from "./MyMenu";
 const Links = ["Coming soon", "Coming soon..."];
 
 const NavLink = ({ children }: { children: ReactNode }) => (
@@ -53,36 +45,7 @@ export default function MyNavbar() {
           <Flex alignItems={"center"}>
             <Stack direction={"row"} spacing={7}>
               <MyColorMode />
-              <Menu>
-                <MenuButton
-                  as={Button}
-                  rounded={"full"}
-                  variant={"link"}
-                  cursor={"pointer"}
-                  minW={0}
-                >
-                  <Avatar
-                    size={"sm"}
-                    src={"https://avatars.dicebear.com/api/male/username.svg"}
-                  />
-                </MenuButton>
-                <MenuList alignItems={"center"}>
-                  <br />
-                  <Center>
-                    <Avatar
-                      size={"2xl"}
-                      src={"https://avatars.dicebear.com/api/male/username.svg"}
-                    />
-                  </Center>
-                  <br />
-                  <Center>
-                    <MyUsername />
-                  </Center>
-                  <br />
-                  <MenuDivider />
-                  <AppHeader />
-                </MenuList>
-              </Menu>
+              <MyMenu />
             </Stack>
           </Flex>
         </Flex>
