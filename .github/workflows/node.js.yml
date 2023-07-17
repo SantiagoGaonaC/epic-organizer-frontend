@@ -26,3 +26,4 @@ jobs:
           echo NEXT_PUBLIC_BACKEND_BASE_URL=${{ secrets.SECRET_API_KEY }} >> .env.local
           echo PUBLIC_BACKEND_BASE_URL=${{ secrets.SECRET_API_KEY }} >> .env.local
     - run: npm run build --if-present
+    - run: pm2 reload 0

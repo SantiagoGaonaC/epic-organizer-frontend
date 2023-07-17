@@ -6,6 +6,7 @@ import { ITask } from "@/models";
 import { useMyModalTask } from "./entites/useMyModalTask";
 import { useContext } from "react";
 import { TaskContext } from "@/context/TaskContext";
+import MyTask from "./entites/MyTask";
 
 const MyDay = ({
   day,
@@ -73,38 +74,11 @@ const MyDay = ({
       >
         {day}
       </span>
-      <div className="mt-7">
-        {tasks.map((task) => (
-          <Box
-            key={task._id}
-            className="m-1 list-outside border p-1 text-left text-xs "
-            onClick={() => handleTaskClick(task)}
-          >
-            <Flex>
-              <Flex
-                onClick={(e) => {
-                  e.stopPropagation();
-                }}
-              >
-                <Checkbox
-                  id={task._id}
-                  defaultChecked={task.toggle}
-                  onChange={(e) => {
-                    e.stopPropagation();
-                    handleCheckboxChange(task);
-                  }}
-                />
-              </Flex>
-              <Box>
-                <Text fontSize="md" ml={1}>
-                  {task.task_title}
-                </Text>
-                <Text className="p-1">{task.category}</Text>
-              </Box>
-            </Flex>
-          </Box>
-        ))}
-      </div>
+      <MyTask
+        tasks={tasks}
+        handleTaskClick={handleTaskClick}
+        handleCheckboxChange={handleCheckboxChange}
+      ></MyTask>
       <MyInsertTask
         selectedDate={selectedDate}
         setTasks={setTasks}
